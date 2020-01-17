@@ -2,7 +2,7 @@
  *
  * Autopsy Forensic Browser
  * 
- * Copyright 2012-2019 Basis Technology Corp.
+ * Copyright 2012-2020 Basis Technology Corp.
  * 
  * Copyright 2012 42six Solutions.
  * Contact: aebadirad <at> 42six <dot> com
@@ -87,9 +87,6 @@ abstract class Extract {
     }
 
     abstract void process(Content dataSource, IngestJobContext context, DataSourceIngestModuleProgress progressBar);
-
-    void complete() {
-    }
 
     /**
      * Returns a List of string error messages from the inheriting class

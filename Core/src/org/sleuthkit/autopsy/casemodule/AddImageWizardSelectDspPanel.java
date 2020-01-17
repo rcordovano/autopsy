@@ -1,7 +1,7 @@
 /*
  * Autopsy Forensic Browser
  *
- * Copyright 2011-2018 Basis Technology Corp.
+ * Copyright 2012-2020 Basis Technology Corp.
  * Contact: carrier <at> sleuthkit <dot> org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,7 +22,6 @@ import java.awt.Component;
 import java.awt.Cursor;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.logging.Level;
 import javax.swing.event.ChangeListener;
 import org.openide.WizardDescriptor;
 import org.openide.util.HelpCtx;
@@ -54,7 +53,6 @@ final class AddImageWizardSelectDspPanel extends ShortcutWizardDescriptorPanel i
                 lastDspUsed = ModuleSettings.getConfigSetting(LAST_DSP_PROPERTIES_FILE, LAST_DSP_USED_KEY);
             } else {
                 lastDspUsed = ImageDSProcessor.getType();
-                logger.log(Level.WARNING, "There was no properties file containing the last DataSourceProcessor used, Disk Image or VM will be selected as default selection"); //NON-NLS
             }
             WindowManager.getDefault().getMainWindow().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
             component = new AddImageWizardSelectDspVisual(lastDspUsed);

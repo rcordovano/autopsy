@@ -2,7 +2,7 @@
  *
  * Autopsy Forensic Browser
  *
- * Copyright 2012-2019 Basis Technology Corp.
+ * Copyright 2012-2020 Basis Technology Corp.
  *
  * Copyright 2012 42six Solutions.
  * Contact: aebadirad <at> 42six <dot> com
@@ -286,7 +286,6 @@ class ExtractRegistry extends Extract {
                 logger.log(Level.SEVERE, null, ex);
             }
 
-            logger.log(Level.INFO, "{0}- Now getting registry information from {1}", new Object[]{moduleName, regFileNameLocal}); //NON-NLS
             RegOutputFiles regOutputFiles = ripRegistryFile(regFileNameLocal, outputPathBase);
             if (context.dataSourceIngestIsCancelled()) {
                 break;
@@ -381,7 +380,6 @@ class ExtractRegistry extends Extract {
         if (!autopsyType.isEmpty()) {
             regOutputFiles.autopsyPlugins = outFilePathBase + "-autopsy.txt"; //NON-NLS
             String errFilePath = outFilePathBase + "-autopsy.err.txt"; //NON-NLS
-            logger.log(Level.INFO, "Writing RegRipper results to: {0}", regOutputFiles.autopsyPlugins); //NON-NLS
             executeRegRipper(rrCmd, rrHome, regFilePath, autopsyType, regOutputFiles.autopsyPlugins, errFilePath);
         }
         if (context.dataSourceIngestIsCancelled()) {
@@ -392,7 +390,6 @@ class ExtractRegistry extends Extract {
         if (!fullType.isEmpty()) {
             regOutputFiles.fullPlugins = outFilePathBase + "-full.txt"; //NON-NLS
             String errFilePath = outFilePathBase + "-full.err.txt"; //NON-NLS
-            logger.log(Level.INFO, "Writing Full RegRipper results to: {0}", regOutputFiles.fullPlugins); //NON-NLS
             executeRegRipper(rrFullCmd, rrFullHome, regFilePath, fullType, regOutputFiles.fullPlugins, errFilePath);
         }
         return regOutputFiles;

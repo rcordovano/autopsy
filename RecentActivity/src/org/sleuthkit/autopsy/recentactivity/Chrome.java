@@ -2,7 +2,7 @@
  *
  * Autopsy Forensic Browser
  *
- * Copyright 2012-2019 Basis Technology Corp.
+ * Copyright 2012-2020 Basis Technology Corp.
  *
  * Copyright 2012 42six Solutions.
  *
@@ -206,7 +206,6 @@ class Chrome extends Extract {
             }
             List<HashMap<String, Object>> tempList;
             tempList = this.dbConnect(temps, HISTORY_QUERY);
-            logger.log(Level.INFO, "{0}- Now getting history from {1} with {2}artifacts identified.", new Object[]{moduleName, temps, tempList.size()}); //NON-NLS
             for (HashMap<String, Object> result : tempList) {
                 Collection<BlackboardAttribute> bbattributes = new ArrayList<BlackboardAttribute>();
                 bbattributes.add(new BlackboardAttribute(ATTRIBUTE_TYPE.TSK_URL,
@@ -287,7 +286,6 @@ class Chrome extends Extract {
                 continue;
             }
 
-            logger.log(Level.INFO, "{0}- Now getting Bookmarks from {1}", new Object[]{moduleName, temps}); //NON-NLS
             File dbFile = new File(temps);
             if (context.dataSourceIngestIsCancelled()) {
                 dbFile.delete();
@@ -429,7 +427,6 @@ class Chrome extends Extract {
             }
 
             List<HashMap<String, Object>> tempList = this.dbConnect(temps, COOKIE_QUERY);
-            logger.log(Level.INFO, "{0}- Now getting cookies from {1} with {2}artifacts identified.", new Object[]{moduleName, temps, tempList.size()}); //NON-NLS
             for (HashMap<String, Object> result : tempList) {
                 Collection<BlackboardAttribute> bbattributes = new ArrayList<>();
                 bbattributes.add(new BlackboardAttribute(ATTRIBUTE_TYPE.TSK_URL,
@@ -525,7 +522,6 @@ class Chrome extends Extract {
                 tempList = this.dbConnect(temps, DOWNLOAD_QUERY_V30);
             }
 
-            logger.log(Level.INFO, "{0}- Now getting downloads from {1} with {2} artifacts identified.", new Object[]{moduleName, temps, tempList.size()}); //NON-NLS
             for (HashMap<String, Object> result : tempList) {
                 Collection<BlackboardAttribute> bbattributes = new ArrayList<>();
                 String fullPath = result.get("full_path").toString(); //NON-NLS
@@ -634,7 +630,6 @@ class Chrome extends Extract {
                 break;
             }
             List<HashMap<String, Object>> tempList = this.dbConnect(temps, LOGIN_QUERY);
-            logger.log(Level.INFO, "{0}- Now getting login information from {1} with {2}artifacts identified.", new Object[]{moduleName, temps, tempList.size()}); //NON-NLS
             for (HashMap<String, Object> result : tempList) {
                 Collection<BlackboardAttribute> bbattributes = new ArrayList<>();
                 
@@ -759,7 +754,6 @@ class Chrome extends Extract {
                                              : AUTOFILL_QUERY;
 
         List<HashMap<String, Object>> autofills = this.dbConnect(dbFilePath, autoFillquery);
-        logger.log(Level.INFO, "{0}- Now getting Autofill information from {1} with {2}artifacts identified.", new Object[]{moduleName, dbFilePath, autofills.size()}); //NON-NLS
         for (HashMap<String, Object> result : autofills) {
             Collection<BlackboardAttribute> bbattributes = new ArrayList<>();
 
@@ -815,7 +809,6 @@ class Chrome extends Extract {
            
         // Get Web form addresses
         List<HashMap<String, Object>> addresses = this.dbConnect(dbFilePath, webformAddressQuery);
-        logger.log(Level.INFO, "{0}- Now getting Web form addresses from {1} with {2}artifacts identified.", new Object[]{moduleName, dbFilePath, addresses.size()}); //NON-NLS
         for (HashMap<String, Object> result : addresses) {
             Collection<BlackboardAttribute> bbattributes = new ArrayList<>();
 

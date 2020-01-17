@@ -1,7 +1,7 @@
 /*
  * Autopsy Forensic Browser
  *
- * Copyright 2014 - 2017 Basis Technology Corp.
+ * Copyright 2014 - 2020 Basis Technology Corp.
  * Contact: carrier <at> sleuthkit <dot> org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -107,7 +107,6 @@ final class IngestSearchRunner {
         // start the timer, if needed
         if ((jobs.size() > 0) && (periodicSearchTaskRunning == false)) {
             // reset the default periodic search frequency to the user setting
-            logger.log(Level.INFO, "Resetting periodic search time out to default value"); //NON-NLS
             currentUpdateIntervalMs = ((long) KeywordSearchSettings.getUpdateFrequency().getTime()) * 60 * 1000;
             jobProcessingTaskFuture = jobProcessingExecutor.schedule(new PeriodicSearchTask(), currentUpdateIntervalMs, MILLISECONDS);
             periodicSearchTaskRunning = true;
@@ -265,7 +264,6 @@ final class IngestSearchRunner {
 
             commit();
 
-            logger.log(Level.INFO, "Starting periodic searches");
             final StopWatch stopWatch = new StopWatch();
             stopWatch.start();
             // NOTE: contents of "jobs" ConcurrentHashMap can be modified in stopJob() and endJob() while we are inside this loop
@@ -429,7 +427,6 @@ final class IngestSearchRunner {
          */
         private void searchNotify() {
             synchronized (finalSearchLock) {
-                logger.log(Level.INFO, "Notifying after finishing search"); //NON-NLS
                 workerRunning = false;
                 finalSearchLock.notify();
             }

@@ -1,7 +1,7 @@
 /*
  * Autopsy Forensic Browser
  *
- * Copyright 2012-2014 Basis Technology Corp.
+ * Copyright 2012-2020 Basis Technology Corp.
  * Contact: carrier <at> sleuthkit <dot> org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -60,7 +60,6 @@ final class IngestPipelinesConfiguration {
      */
     synchronized static IngestPipelinesConfiguration getInstance() {
         if (instance == null) {
-            Logger.getLogger(IngestPipelinesConfiguration.class.getName()).log(Level.INFO, "Creating ingest module loader instance"); //NON-NLS
             instance = new IngestPipelinesConfiguration();
         }
         return instance;

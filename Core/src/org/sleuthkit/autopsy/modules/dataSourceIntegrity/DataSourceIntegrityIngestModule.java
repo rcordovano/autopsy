@@ -1,7 +1,7 @@
 /*
  * Autopsy Forensic Browser
  *
- * Copyright 2013-2019 Basis Technology Corp.
+ * Copyright 2013-2020 Basis Technology Corp.
  * Contact: carrier <at> sleuthkit <dot> org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -118,7 +118,6 @@ public class DataSourceIntegrityIngestModule implements DataSourceIngestModule {
 
         // Skip non-images
         if (!(dataSource instanceof Image)) {
-            logger.log(Level.INFO, "Skipping non-image {0}", imgName); //NON-NLS
             services.postMessage(IngestMessage.createMessage(MessageType.INFO, DataSourceIntegrityModuleFactory.getModuleName(),
                     NbBundle.getMessage(this.getClass(),
                             "DataSourceIntegrityIngestModule.process.skipNonEwf",
@@ -204,7 +203,6 @@ public class DataSourceIntegrityIngestModule implements DataSourceIngestModule {
 
         // Casting to double to capture decimals
         int totalChunks = (int) Math.ceil((double) size / (double) chunkSize);
-        logger.log(Level.INFO, "Total chunks = {0}", totalChunks); //NON-NLS
 
         if (mode.equals(Mode.VERIFY)) {
             logger.log(Level.INFO, "Starting hash verification of {0}", img.getName()); //NON-NLS

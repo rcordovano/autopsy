@@ -2,7 +2,7 @@
  *
  * Autopsy Forensic Browser
  *
- * Copyright 2012-2019 Basis Technology Corp.
+ * Copyright 2012-2020 Basis Technology Corp.
  *
  * Copyright 2012 42six Solutions.
  * Contact: aebadirad <at> 42six <dot> com
@@ -186,17 +186,6 @@ public final class RAImageIngestModule implements DataSourceIngestModule {
 
         if (context.dataSourceIngestIsCancelled()) {
             return ProcessResult.OK;
-        }
-
-        for (int i = 0; i < extractors.size(); i++) {
-            Extract extracter = extractors.get(i);
-            try {
-                extracter.complete();
-            } catch (Exception ex) {
-                logger.log(Level.SEVERE, "Exception occurred when completing " + extracter.getName(), ex); //NON-NLS
-                subCompleted.append(NbBundle.getMessage(this.getClass(), "RAImageIngestModule.complete.errMsg.failed",
-                        extracter.getName()));
-            }
         }
 
         return ProcessResult.OK;

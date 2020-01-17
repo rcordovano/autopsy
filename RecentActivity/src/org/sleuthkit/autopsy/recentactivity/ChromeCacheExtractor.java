@@ -2,7 +2,7 @@
  *
  * Autopsy Forensic Browser
  *
- * Copyright 2019 Basis Technology Corp.
+ * Copyright 2019-2020 Basis Technology Corp.
  *
  * Project Contact/Architect: carrier <at> sleuthkit <dot> org
  *
@@ -321,8 +321,6 @@ final class ChromeCacheExtractor {
 
         
         // parse the index file
-        logger.log(Level.INFO, "{0}- Now reading Cache index file from path {1}", new Object[]{moduleName, cachePath }); //NON-NLS
-
         List<AbstractFile> derivedFiles = new ArrayList<>();
         Collection<BlackboardArtifact> sourceArtifacts = new ArrayList<>();
         Collection<BlackboardArtifact> webCacheArtifacts = new ArrayList<>();

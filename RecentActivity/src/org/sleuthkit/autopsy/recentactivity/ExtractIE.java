@@ -2,7 +2,7 @@
  *
  * Autopsy Forensic Browser
  *
- * Copyright 2011-2019 Basis Technology Corp.
+ * Copyright 2011-2020 Basis Technology Corp.
  *
  * Copyright 2012 42six Solutions.
  * Contact: aebadirad <at> 42six <dot> com
@@ -284,7 +284,6 @@ class ExtractIE extends Extract {
      * Locates index.dat files, runs Pasco on them, and creates artifacts.
      */
     private void getHistory() {
-        logger.log(Level.INFO, "Pasco results path: {0}", moduleTempResultsDir); //NON-NLS
         boolean foundHistory = false;
 
         final File pascoRoot = InstalledFileLocator.getDefault().locate("pasco2", ExtractIE.class.getPackage().getName(), false); //NON-NLS
@@ -296,7 +295,6 @@ class ExtractIE extends Extract {
         }
 
         final String pascoHome = pascoRoot.getAbsolutePath();
-        logger.log(Level.INFO, "Pasco2 home: {0}", pascoHome); //NON-NLS
 
         PASCO_LIB_PATH = pascoHome + File.separator + "pasco2.jar" + File.pathSeparator //NON-NLS
                 + pascoHome + File.separator + "*";
@@ -393,7 +391,6 @@ class ExtractIE extends Extract {
         try {
             final String outputFileFullPath = moduleTempResultsDir + File.separator + outputFileName;
             final String errFileFullPath = moduleTempResultsDir + File.separator + outputFileName + ".err"; //NON-NLS
-            logger.log(Level.INFO, "Writing pasco results to: {0}", outputFileFullPath); //NON-NLS   
             List<String> commandLine = new ArrayList<>();
             commandLine.add(JAVA_PATH);
             commandLine.add("-cp"); //NON-NLS
@@ -476,7 +473,7 @@ class ExtractIE extends Extract {
             String[] lineBuff = line.split("\\t"); //NON-NLS
 
             if (lineBuff.length < 4) {
-                logger.log(Level.INFO, "Found unrecognized IE history format."); //NON-NLS
+                logger.log(Level.INFO, String.format("Found unrecognized IE history format in %s (objID = %d)", origFile.getName(), origFile.getId())); //NON-NLS
                 continue;
             }
 

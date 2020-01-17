@@ -1,7 +1,7 @@
 /*
  * Autopsy Forensic Browser
  *
- * Copyright 2012-2018 Basis Technology Corp.
+ * Copyright 2012-2020 Basis Technology Corp.
  * Contact: carrier <at> sleuthkit <dot> org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -113,8 +113,6 @@ final class VMExtractorIngestModule extends DataSourceIngestModuleAdapter {
         // Not sure how long it will take for search to complete.
         progressBar.switchToIndeterminate();
 
-        logger.log(Level.INFO, "Looking for virtual machine files in data source {0}", dataSource.getName()); //NON-NLS
-
         try {
             // look for all VM files
             vmFiles = findVirtualMachineFiles(dataSource);
@@ -128,7 +126,6 @@ final class VMExtractorIngestModule extends DataSourceIngestModuleAdapter {
 
         if (vmFiles.isEmpty()) {
             // no VM files found
-            logger.log(Level.INFO, "No virtual machine files found in data source {0}", dataSource.getName()); //NON-NLS
             return ProcessResult.OK;
         }
         // display progress for saving each VM file to disk

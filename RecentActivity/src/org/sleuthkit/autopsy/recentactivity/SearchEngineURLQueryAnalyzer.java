@@ -1,7 +1,7 @@
 /*
  * Autopsy Forensic Browser
  *
- * Copyright 2012-2014 Basis Technology Corp.
+ * Copyright 2012-2020 Basis Technology Corp.
  * Contact: carrier <at> sleuthkit <dot> org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -157,7 +157,6 @@ class SearchEngineURLQueryAnalyzer extends Extract {
         try {
             String path = PlatformUtil.getUserConfigDirectory() + File.separator + XMLFILE;
             File f = new File(path);
-            logger.log(Level.INFO, "Load successful"); //NON-NLS
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
             xmlinput = db.parse(f);
@@ -296,7 +295,6 @@ class SearchEngineURLQueryAnalyzer extends Extract {
             //from blackboard_artifacts
             Collection<BlackboardArtifact> listArtifacts = currentCase.getSleuthkitCase().getMatchingArtifacts("WHERE (blackboard_artifacts.artifact_type_id = '" + ARTIFACT_TYPE.TSK_WEB_BOOKMARK.getTypeID() //NON-NLS
                     + "' OR blackboard_artifacts.artifact_type_id = '" + ARTIFACT_TYPE.TSK_WEB_HISTORY.getTypeID() + "') ");  //List of every 'web_history' and 'bookmark' artifact NON-NLS
-            logger.log(Level.INFO, "Processing {0} blackboard artifacts.", listArtifacts.size()); //NON-NLS
 
             for (BlackboardArtifact artifact : listArtifacts) {
                 if (context.dataSourceIngestIsCancelled()) {
@@ -377,19 +375,7 @@ class SearchEngineURLQueryAnalyzer extends Extract {
             if (context.dataSourceIngestIsCancelled()) {
                 logger.info("Operation terminated by user."); //NON-NLS
             }
-            logger.log(Level.INFO, "Extracted {0} queries from the blackboard", totalQueries); //NON-NLS
         }
-    }
-
-    private String getTotals() {
-        String total = "";
-        if (engines == null) {
-            return total;
-        }
-        for (SearchEngineURLQueryAnalyzer.SearchEngine se : engines) {
-            total += se.getEngineName() + " : " + se.getTotal() + "\n";
-        }
-        return total;
     }
 
     @Override
@@ -399,7 +385,6 @@ class SearchEngineURLQueryAnalyzer extends Extract {
         
         progressBar.progress(Bundle.Progress_Message_Find_Search_Query());
         this.findSearchQueries();
-        logger.log(Level.INFO, "Search Engine stats: \n{0}", getTotals()); //NON-NLS
     }
 
     @Override
@@ -414,8 +399,4 @@ class SearchEngineURLQueryAnalyzer extends Extract {
         loadConfigFile();
     }
 
-    @Override
-    public void complete() {
-        logger.info("Search Engine URL Query Analyzer has completed."); //NON-NLS
-    }
 }

@@ -2,7 +2,7 @@
  *
  * Autopsy Forensic Browser
  * 
- * Copyright 2012-2019 Basis Technology Corp.
+ * Copyright 2012-2020 Basis Technology Corp.
  * 
  * Copyright 2012 42six Solutions.
  * Contact: aebadirad <at> 42six <dot> com
@@ -183,7 +183,6 @@ class Firefox extends Extract {
                 break;
             }
             List<HashMap<String, Object>> tempList = this.dbConnect(temps, HISTORY_QUERY);
-            logger.log(Level.INFO, "{0} - Now getting history from {1} with {2} artifacts identified.", new Object[]{moduleName, temps, tempList.size()}); //NON-NLS
             for (HashMap<String, Object> result : tempList) {
                 
                 if (context.dataSourceIngestIsCancelled()) {
@@ -279,7 +278,6 @@ class Firefox extends Extract {
                 break;
             }
             List<HashMap<String, Object>> tempList = this.dbConnect(temps, BOOKMARK_QUERY);
-            logger.log(Level.INFO, "{0} - Now getting bookmarks from {1} with {2} artifacts identified.", new Object[]{moduleName, temps, tempList.size()}); //NON-NLS
             for (HashMap<String, Object> result : tempList) {
                 
                 if (context.dataSourceIngestIsCancelled()) {
@@ -381,7 +379,6 @@ class Firefox extends Extract {
             }
 
             List<HashMap<String, Object>> tempList = this.dbConnect(temps, query);
-            logger.log(Level.INFO, "{0} - Now getting cookies from {1} with {2} artifacts identified.", new Object[]{moduleName, temps, tempList.size()}); //NON-NLS
             for (HashMap<String, Object> result : tempList) {
                 
                 if (context.dataSourceIngestIsCancelled()) {
@@ -495,7 +492,6 @@ class Firefox extends Extract {
             }
 
             List<HashMap<String, Object>> tempList = this.dbConnect(temps, DOWNLOAD_QUERY);
-            logger.log(Level.INFO, "{0}- Now getting downloads from {1} with {2} artifacts identified.", new Object[]{moduleName, temps, tempList.size()}); //NON-NLS
             for (HashMap<String, Object> result : tempList) {
                 
                 if (context.dataSourceIngestIsCancelled()) {
@@ -634,8 +630,6 @@ class Firefox extends Extract {
             }
 
             List<HashMap<String, Object>> tempList = this.dbConnect(temps, DOWNLOAD_QUERY_V24);
-
-            logger.log(Level.INFO, "{0} - Now getting downloads from {1} with {2} artifacts identified.", new Object[]{moduleName, temps, tempList.size()}); //NON-NLS
             for (HashMap<String, Object> result : tempList) {
                 
                 if (context.dataSourceIngestIsCancelled()) {
@@ -783,7 +777,6 @@ class Firefox extends Extract {
             String formHistoryQuery = (isFirefoxV64) ? FORMHISTORY_QUERY_V64 : FORMHISTORY_QUERY;
            
             List<HashMap<String, Object>> tempList = this.dbConnect(tempFilePath, formHistoryQuery);
-            logger.log(Level.INFO, "{0} - Now getting history from {1} with {2} artifacts identified.", new Object[]{moduleName, tempFilePath, tempList.size()}); //NON-NLS
             for (HashMap<String, Object> result : tempList) {
                 
                 if (context.dataSourceIngestIsCancelled()) {
@@ -883,7 +876,6 @@ class Firefox extends Extract {
                 continue;
             }
 
-            logger.log(Level.INFO, "{0}- Now getting Bookmarks from {1}", new Object[]{moduleName, temps}); //NON-NLS
             File dbFile = new File(temps);
             if (context.dataSourceIngestIsCancelled()) {
                 dbFile.delete();
