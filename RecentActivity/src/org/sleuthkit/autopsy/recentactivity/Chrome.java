@@ -31,11 +31,14 @@ import com.google.gson.JsonSyntaxException;
 import org.openide.util.NbBundle;
 import org.sleuthkit.autopsy.datamodel.ContentUtils;
 import java.util.logging.Level;
-import java.util.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
 import org.apache.commons.io.FilenameUtils;
 import org.openide.util.NbBundle.Messages;
 import org.sleuthkit.autopsy.casemodule.Case;
@@ -167,11 +170,7 @@ class Chrome extends Extract {
                 allocatedHistoryFiles.add(historyFile);
             }
         }
-
-        // log a message if we don't have any allocated history files
         if (allocatedHistoryFiles.isEmpty()) {
-            String msg = NbBundle.getMessage(this.getClass(), "Chrome.getHistory.errMsg.couldntFindAnyFiles");
-            logger.log(Level.INFO, msg);
             return;
         }
 
@@ -180,7 +179,8 @@ class Chrome extends Extract {
         int j = 0;
         while (j < historyFiles.size()) {
             String temps = RAImageIngestModule.getRATempPath(currentCase, "chrome") + File.separator + historyFiles.get(j).getName() + j + ".db"; //NON-NLS
-            final AbstractFile historyFile = historyFiles.get(j++);
+            j++;
+            final AbstractFile historyFile = historyFiles.get(j);
             if (historyFile.getSize() == 0) {
                 continue;
             }
@@ -207,7 +207,7 @@ class Chrome extends Extract {
             List<HashMap<String, Object>> tempList;
             tempList = this.dbConnect(temps, HISTORY_QUERY);
             for (HashMap<String, Object> result : tempList) {
-                Collection<BlackboardAttribute> bbattributes = new ArrayList<BlackboardAttribute>();
+                Collection<BlackboardAttribute> bbattributes = new ArrayList<>();
                 bbattributes.add(new BlackboardAttribute(ATTRIBUTE_TYPE.TSK_URL,
                         RecentActivityExtracterModuleFactory.getModuleName(),
                         ((result.get("url").toString() != null) ? result.get("url").toString() : ""))); //NON-NLS
@@ -256,7 +256,6 @@ class Chrome extends Extract {
         }
 
         if (bookmarkFiles.isEmpty()) {
-            logger.log(Level.INFO, "Didn't find any Chrome bookmark files."); //NON-NLS
             return;
         }
 
@@ -265,7 +264,8 @@ class Chrome extends Extract {
         int j = 0;
 
         while (j < bookmarkFiles.size()) {
-            AbstractFile bookmarkFile = bookmarkFiles.get(j++);
+            j++;
+            AbstractFile bookmarkFile = bookmarkFiles.get(j);
             if (bookmarkFile.getSize() == 0) {
                 continue;
             }
@@ -392,7 +392,6 @@ class Chrome extends Extract {
         }
 
         if (cookiesFiles.isEmpty()) {
-            logger.log(Level.INFO, "Didn't find any Chrome cookies files."); //NON-NLS
             return;
         }
 
@@ -400,7 +399,8 @@ class Chrome extends Extract {
         Collection<BlackboardArtifact> bbartifacts = new ArrayList<>();
         int j = 0;
         while (j < cookiesFiles.size()) {
-            AbstractFile cookiesFile = cookiesFiles.get(j++);
+            j++;
+            AbstractFile cookiesFile = cookiesFiles.get(j);
             if (cookiesFile.getSize() == 0) {
                 continue;
             }
@@ -480,7 +480,6 @@ class Chrome extends Extract {
         }
 
         if (downloadFiles.isEmpty()) {
-            logger.log(Level.INFO, "Didn't find any Chrome download files."); //NON-NLS
             return;
         }
 
@@ -488,7 +487,8 @@ class Chrome extends Extract {
         Collection<BlackboardArtifact> bbartifacts = new ArrayList<>();
         int j = 0;
         while (j < downloadFiles.size()) {
-            AbstractFile downloadFile = downloadFiles.get(j++);
+            j++;
+            AbstractFile downloadFile = downloadFiles.get(j);
             if (downloadFile.getSize() == 0) {
                 continue;
             }
@@ -596,7 +596,6 @@ class Chrome extends Extract {
         }
 
         if (loginDataFiles.isEmpty()) {
-            logger.log(Level.INFO, "Didn't find any Chrome Login Data files."); //NON-NLS
             return;
         }
         
@@ -604,7 +603,8 @@ class Chrome extends Extract {
         Collection<BlackboardArtifact> bbartifacts = new ArrayList<>();
         int j = 0;
         while (j < loginDataFiles.size()) {
-            AbstractFile loginDataFile = loginDataFiles.get(j++);
+            j++;
+            AbstractFile loginDataFile = loginDataFiles.get(j);
             if (loginDataFile.getSize() == 0) {
                 continue;
             }
@@ -686,7 +686,6 @@ class Chrome extends Extract {
         }
 
         if (webDataFiles.isEmpty()) {
-            logger.log(Level.INFO, "Didn't find any Chrome Web Data files."); //NON-NLS
             return;
         }
         
@@ -694,7 +693,8 @@ class Chrome extends Extract {
         Collection<BlackboardArtifact> bbartifacts = new ArrayList<>();
         int j = 0;
         while (j < webDataFiles.size()) {
-            AbstractFile webDataFile = webDataFiles.get(j++);
+            j++;
+            AbstractFile webDataFile = webDataFiles.get(j);
             if (webDataFile.getSize() == 0) {
                 continue;
             }
@@ -829,7 +829,7 @@ class Chrome extends Extract {
 
             // schema version specific fields
             String full_name = "";
-            String street_address = "";
+            String street_address;
             long date_modified = 0;
             int  use_count = 0;
             long use_date = 0;

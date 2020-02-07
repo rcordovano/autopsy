@@ -2,7 +2,7 @@
  *
  * Autopsy Forensic Browser
  * 
- * Copyright 2012-2014 Basis Technology Corp.
+ * Copyright 2012-2020 Basis Technology Corp.
  * 
  * Copyright 2012 42six Solutions.
  * Contact: aebadirad <at> 42six <dot> com
@@ -78,7 +78,6 @@ class RecentDocumentsByLnk extends Extract {
         }
 
         if (recentFiles.isEmpty()) {
-            logger.log(Level.INFO, "Didn't find any recent files."); //NON-NLS
             return;
         }
 

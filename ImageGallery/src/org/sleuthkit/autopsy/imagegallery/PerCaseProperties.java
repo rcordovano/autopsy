@@ -129,7 +129,6 @@ class PerCaseProperties {
     public synchronized String getConfigSetting(String moduleName, String settingName) {
         if (!configExists(moduleName)) {
             makeConfigFile(moduleName);
-            Logger.getLogger(PerCaseProperties.class.getName()).log(Level.INFO, "File did not exist. Created file [" + moduleName + ".properties]"); //NON-NLS NON-NLS
         }
 
         try {

@@ -1,7 +1,7 @@
 /*
  * Autopsy Forensic Browser
  *
- * Copyright 2011-2018 Basis Technology Corp.
+ * Copyright 2011-2020 Basis Technology Corp.
  * Contact: carrier <at> sleuthkit <dot> org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -158,7 +158,6 @@ public final class IngestMonitor {
                  * is no case.
                  */
                 root = new File(File.separator);
-                logMonitoredRootDirectory();
             }
         }
 
@@ -176,15 +175,6 @@ public final class IngestMonitor {
                 parentDir = curDir.getParentFile();
             }
             root = curDir;
-            logMonitoredRootDirectory();
-        }
-
-        /**
-         * Writes an info message to the Autopsy log identifying the root
-         * directory being monitored.
-         */
-        private void logMonitoredRootDirectory() {
-            logger.log(Level.INFO, "Monitoring disk space of {0}", root.getAbsolutePath()); //NON-NLS
         }
 
         @Override

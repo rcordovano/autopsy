@@ -1,7 +1,7 @@
 /*
  * Autopsy Forensic Browser
  *
- * Copyright 2014 - 2020 Basis Technology Corp.
+ * Copyright 2014-2020 Basis Technology Corp.
  * Contact: carrier <at> sleuthkit <dot> org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -36,6 +36,7 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Level;
+import javax.annotation.concurrent.GuardedBy;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import org.netbeans.api.progress.aggregate.AggregateProgressFactory;
@@ -52,36 +53,40 @@ import org.sleuthkit.autopsy.ingest.IngestMessage;
 import org.sleuthkit.autopsy.ingest.IngestServices;
 
 /**
- * Singleton keyword search manager: Launches search threads for each job and
- * performs commits, both on timed intervals.
+ * Performs periodic commits of the text index and periodic and final keyword
+ * searches for ingest jobs.
  */
 final class IngestSearchRunner {
 
     private static final Logger logger = Logger.getLogger(IngestSearchRunner.class.getName());
-    private static IngestSearchRunner instance = null;
+    private static IngestSearchRunner instance;
     private IngestServices services = IngestServices.getInstance();
-    private Ingester ingester = null;
+    private Ingester ingester;
     private long currentUpdateIntervalMs;
-    private volatile boolean periodicSearchTaskRunning = false;
-    private Future<?> jobProcessingTaskFuture;
-    private final ScheduledThreadPoolExecutor jobProcessingExecutor;
+    private volatile boolean periodicSearchTaskRunning;
+    private Future<?> periodicSearchTaskFuture;
+    private final ScheduledThreadPoolExecutor periodicSearchTaskExecutor;
     private static final int NUM_SEARCH_SCHEDULING_THREADS = 1;
     private static final String SEARCH_SCHEDULER_THREAD_NAME = "periodic-search-scheduler-%d";
+    private Map<Long, SearchJobInfo> searchJobsByIngestJob = new ConcurrentHashMap<>();
 
-    // maps a jobID to the search
-    private Map<Long, SearchJobInfo> jobs = new ConcurrentHashMap<>();
-
-    IngestSearchRunner() {
+    /**
+     * Constructs an ingest search runner that performs periodic commits of the
+     * text index and periodic and final keyword searches for ingest jobs.
+     */
+    private IngestSearchRunner() {
         currentUpdateIntervalMs = ((long) KeywordSearchSettings.getUpdateFrequency().getTime()) * 60 * 1000;
         ingester = Ingester.getDefault();
-        jobProcessingExecutor = new ScheduledThreadPoolExecutor(NUM_SEARCH_SCHEDULING_THREADS, new ThreadFactoryBuilder().setNameFormat(SEARCH_SCHEDULER_THREAD_NAME).build());
+        periodicSearchTaskExecutor = new ScheduledThreadPoolExecutor(NUM_SEARCH_SCHEDULING_THREADS, new ThreadFactoryBuilder().setNameFormat(SEARCH_SCHEDULER_THREAD_NAME).build());
     }
 
     /**
+     * Gets the singleton ingest search runner that performs periodic commits of
+     * the text index and periodic and final keyword searches for ingest jobs.
      *
-     * @return the singleton object
+     * @return The ingest search runner.
      */
-    public static synchronized IngestSearchRunner getInstance() {
+    static synchronized IngestSearchRunner getInstance() {
         if (instance == null) {
             instance = new IngestSearchRunner();
         }
@@ -89,78 +94,101 @@ final class IngestSearchRunner {
     }
 
     /**
+     * Queues a search job for an ingest job.
      *
-     * @param jobContext
-     * @param keywordListNames
+     * @param jobContext       The ingest job context for the ingest job.
+     * @param keywordListNames The keyword lists to be searched for the ingest
+     *                         job.
      */
-    public synchronized void startJob(IngestJobContext jobContext, List<String> keywordListNames) {
-        long jobId = jobContext.getJobId();
-        if (jobs.containsKey(jobId) == false) {
-            logger.log(Level.INFO, "Adding job {0}", jobId); //NON-NLS
+    synchronized void queueSearchJob(IngestJobContext jobContext, List<String> keywordListNames) {
+        /*
+         * Add a data structure for keeping track of the search job for an
+         * ingest job, if the search job does not already exist. If the search
+         * job already exists it is because another keyword search ingest module
+         * doing analysis for the same ingest job got here first.
+         */
+        long ingestJobID = jobContext.getJobId();
+        if (searchJobsByIngestJob.containsKey(ingestJobID) == false) {
             SearchJobInfo jobData = new SearchJobInfo(jobContext, keywordListNames);
-            jobs.put(jobId, jobData);
+            searchJobsByIngestJob.put(ingestJobID, jobData);
         }
 
-        // keep track of how many threads / module instances from this job have asked for this
-        jobs.get(jobId).incrementModuleReferenceCount();
+        /*
+         * Keep track of how many keyword search ingest module instances are
+         * doing analysis for the same ingest job so that we can know when they
+         * have all finished indexing the and the final search for the ingest
+         * job can be performed.
+         */
+        searchJobsByIngestJob.get(ingestJobID).incrementModuleReferenceCount();
 
-        // start the timer, if needed
-        if ((jobs.size() > 0) && (periodicSearchTaskRunning == false)) {
-            // reset the default periodic search frequency to the user setting
+        /*
+         * Create a background task to do a text index commit and then a search
+         * for EVERY ingest job in progress, if one does not already exist.
+         * These searches are periodic searches, not final searches.
+         */
+        if ((searchJobsByIngestJob.size() > 0) && (periodicSearchTaskRunning == false)) {
             currentUpdateIntervalMs = ((long) KeywordSearchSettings.getUpdateFrequency().getTime()) * 60 * 1000;
-            jobProcessingTaskFuture = jobProcessingExecutor.schedule(new PeriodicSearchTask(), currentUpdateIntervalMs, MILLISECONDS);
+            periodicSearchTaskFuture = periodicSearchTaskExecutor.schedule(new PeriodicSearchTask(), currentUpdateIntervalMs, MILLISECONDS);
             periodicSearchTaskRunning = true;
         }
     }
 
     /**
-     * Perform normal finishing of searching for this job, including one last
-     * commit and search. Blocks until the final search is complete.
+     * Finishes a search job for an ingest job, including performing one last
+     * commit of the text index and the final search. Blocks until the final
+     * search is complete.
      *
-     * @param jobId
+     * @param ingestJobId The ID of the ingest job for which the search job is
+     *                    being done.
      */
-    public synchronized void endJob(long jobId) {
+    synchronized void finishSearchJob(long ingestJobId) {
+        /*
+         * Make sure the search job has not already been finished.
+         */
         SearchJobInfo job;
-        boolean readyForFinalSearch = false;
-        job = jobs.get(jobId);
+        job = searchJobsByIngestJob.get(ingestJobId);
         if (job == null) {
             return;
         }
 
-        // Only do final search if this is the last module/thread in this job to call endJob()
+        /*
+         * Only do the fnial search if all of the keyword search ingest module
+         * instances doing analysis for the same ingest job have all indexing
+         * the files for the ingest job.
+         */
+        boolean readyForFinalSearch = false;
         if (job.decrementModuleReferenceCount() == 0) {
-            jobs.remove(jobId);
+            searchJobsByIngestJob.remove(ingestJobId);
             readyForFinalSearch = true;
         }
 
         if (readyForFinalSearch) {
-            logger.log(Level.INFO, "Commiting search index before final search for search job {0}", job.getJobId()); //NON-NLS
             commit();
-            doFinalSearch(job); //this will block until it's done
+            doFinalSearch(job); // Blocks until search is completed.
 
             // new jobs could have been added while we were doing final search
-            if (jobs.isEmpty()) {
+            if (searchJobsByIngestJob.isEmpty()) {
                 // no more jobs left. stop the PeriodicSearchTask. 
                 // A new one will be created for future jobs. 
-                logger.log(Level.INFO, "No more search jobs. Stopping periodic search task"); //NON-NLS
                 periodicSearchTaskRunning = false;
-                jobProcessingTaskFuture.cancel(true);
+                periodicSearchTaskFuture.cancel(true);
             }
         }
     }
 
     /**
-     * Immediate stop and removal of job from SearchRunner. Cancels the
-     * associated search worker if it's still running.
+     * Cancels the search job for in ingest job. The search job data structure
+     * is removed and the final search SwingWorker for the jobm if it exists, is
+     * cancelled.
      *
-     * @param jobId
+     * @param ingestJobId
      */
-    public synchronized void stopJob(long jobId) {
-        logger.log(Level.INFO, "Stopping search job {0}", jobId); //NON-NLS
+    synchronized void cancelSearchJob(long ingestJobId) {
+        logger.log(Level.INFO, "Stopping search job {0}", ingestJobId); //NON-NLS
         commit();
 
         SearchJobInfo job;
-        job = jobs.get(jobId);
+        job = searchJobsByIngestJob.get(ingestJobId);
         if (job == null) {
             return;
         }
@@ -168,48 +196,47 @@ final class IngestSearchRunner {
         //stop currentSearcher
         IngestSearchRunner.Searcher currentSearcher = job.getCurrentSearcher();
         if ((currentSearcher != null) && (!currentSearcher.isDone())) {
-            logger.log(Level.INFO, "Cancelling search job {0}", jobId); //NON-NLS
+            logger.log(Level.INFO, "Cancelling search job {0}", ingestJobId); //NON-NLS
             currentSearcher.cancel(true);
         }
 
-        jobs.remove(jobId);
+        searchJobsByIngestJob.remove(ingestJobId);
 
-        if (jobs.isEmpty()) {
+        if (searchJobsByIngestJob.isEmpty()) {
             // no more jobs left. stop the PeriodicSearchTask. 
             // A new one will be created for future jobs. 
             logger.log(Level.INFO, "No more search jobs. Stopping periodic search task"); //NON-NLS
             periodicSearchTaskRunning = false;
-            jobProcessingTaskFuture.cancel(true);
+            periodicSearchTaskFuture.cancel(true);
         }
     }
 
     /**
-     * Add these lists to all of the jobs. Used when user wants to search for a
-     * list while ingest has already started.
+     * Adds one or more keyword lists to the search jobs for all of the ingest
+     * jobs that are in progress.
      *
-     * @param keywordListNames
+     * @param keywordListNames The names of the keyword lists to add to the
+     *                         search jobs for the ingest jobs.
      */
-    public synchronized void addKeywordListsToAllJobs(List<String> keywordListNames) {
+    synchronized void addKeywordListsToAllJobs(List<String> keywordListNames) {
         for (String listName : keywordListNames) {
-            logger.log(Level.INFO, "Adding keyword list {0} to all jobs", listName); //NON-NLS
-            for (SearchJobInfo j : jobs.values()) {
-                j.addKeywordListName(listName);
+            for (SearchJobInfo searchJob : searchJobsByIngestJob.values()) {
+                searchJob.addKeywordListName(listName);
             }
         }
     }
 
     /**
-     * Commits index and notifies listeners of index update
+     * Commits the text index and fires an event to notify listeners that the
+     * number of indexed files has changed because of the commit.
      */
     private void commit() {
         ingester.commit();
-
-        // Signal a potential change in number of text_ingested files
         try {
             final int numIndexedFiles = KeywordSearch.getServer().queryNumIndexedFiles();
             KeywordSearch.fireNumIndexedFilesChange(null, numIndexedFiles);
         } catch (NoOpenCoreException | KeywordSearchModuleException ex) {
-            logger.log(Level.SEVERE, "Error executing Solr query to check number of indexed files", ex); //NON-NLS
+            logger.log(Level.SEVERE, "Error executing Solr query for number of indexed files", ex); //NON-NLS
         }
     }
 
@@ -221,33 +248,31 @@ final class IngestSearchRunner {
      */
     private void doFinalSearch(SearchJobInfo job) {
         // Run one last search as there are probably some new files committed
-        logger.log(Level.INFO, "Starting final search for search job {0}", job.getJobId());         //NON-NLS
+        logger.log(Level.INFO, "Starting final search for ingest job {0}", job.getIngestJobId()); //NON-NLS
         if (!job.getKeywordListNames().isEmpty()) {
             try {
                 // In case this job still has a worker running, wait for it to finish
-                logger.log(Level.INFO, "Checking for previous search for search job {0} before executing final search", job.getJobId()); //NON-NLS
                 job.waitForCurrentWorker();
 
                 IngestSearchRunner.Searcher finalSearcher = new IngestSearchRunner.Searcher(job, true);
                 job.setCurrentSearcher(finalSearcher); //save the ref
-                logger.log(Level.INFO, "Kicking off final search for search job {0}", job.getJobId()); //NON-NLS
                 finalSearcher.execute(); //start thread
 
                 // block until the search is complete
-                logger.log(Level.INFO, "Waiting for final search for search job {0}", job.getJobId()); //NON-NLS
                 finalSearcher.get();
-                logger.log(Level.INFO, "Final search for search job {0} completed", job.getJobId()); //NON-NLS
 
             } catch (InterruptedException | CancellationException ex) {
-                logger.log(Level.INFO, "Final search for search job {0} interrupted or cancelled", job.getJobId()); //NON-NLS
+                logger.log(Level.WARNING, "Final search for ingest job {0} interrupted or cancelled", job.getIngestJobId()); //NON-NLS
             } catch (ExecutionException ex) {
-                logger.log(Level.SEVERE, String.format("Final search for search job %d failed", job.getJobId()), ex); //NON-NLS
+                logger.log(Level.SEVERE, String.format("Final search for ingest job %d failed", job.getIngestJobId()), ex); //NON-NLS
             }
         }
     }
 
     /**
-     * Task to perform periodic searches for each job (does a single index commit first)
+     * Task that commits the text index and then performs a periodic search for
+     * EVERY ingest job in progress. The searches are done in another thread,
+     * but only one at a time.
      */
     private final class PeriodicSearchTask implements Runnable {
 
@@ -255,63 +280,92 @@ final class IngestSearchRunner {
 
         @Override
         public void run() {
-            // If no jobs then cancel the task. If more job(s) come along, a new task will start up.
-            if (jobs.isEmpty() || jobProcessingTaskFuture.isCancelled()) {
-                logger.log(Level.INFO, "Exiting periodic search task"); //NON-NLS
+            /*
+             * Search jobs for ingest jobs could have been added or removed
+             * while this task was waiting for the current interval between
+             * periodic searches to elapse. If there are no more search jobs or
+             * this task has been cancelled, exit immediately.
+             *
+             * RC: Calling ConcurrentHashMap.isEmpty is not a reliable way to
+             * determine if the map is indeed empty.
+             */
+            if (searchJobsByIngestJob.isEmpty() || periodicSearchTaskFuture.isCancelled()) {
                 periodicSearchTaskRunning = false;
                 return;
             }
 
+            /*
+             * Commit all of the indexing that the keyword search ingest modules
+             * have done since the last periodic search.
+             */
             commit();
 
+            /*
+             * Do a search for EVERY ingest job in progress. Although this task
+             * starts the search for each job in a separate thread, it kicks off
+             * the searches one at a time and waits for one search to finish
+             * before starting the next one.
+             *
+             * RC: An Iterator over the contents of a ConcurrentHashMap only
+             * iterates over a snapshot of the state of the data structure at
+             * some point at or since the creation of the iterator.
+             */
             final StopWatch stopWatch = new StopWatch();
             stopWatch.start();
-            // NOTE: contents of "jobs" ConcurrentHashMap can be modified in stopJob() and endJob() while we are inside this loop
-            for (Iterator<Entry<Long, SearchJobInfo>> iterator = jobs.entrySet().iterator(); iterator.hasNext();) {
-                SearchJobInfo job = iterator.next().getValue();
+            for (Iterator<Entry<Long, SearchJobInfo>> iterator = searchJobsByIngestJob.entrySet().iterator(); iterator.hasNext();) {
+                SearchJobInfo searchJob = iterator.next().getValue();
 
-                if (jobProcessingTaskFuture.isCancelled()) {
+                /*
+                 * RC: I think that we should be checking for an interrupt of
+                 * the current thread here.
+                 */
+                if (periodicSearchTaskFuture.isCancelled()) {
                     logger.log(Level.INFO, "Search has been cancelled. Exiting periodic search task."); //NON-NLS
                     periodicSearchTaskRunning = false;
                     return;
                 }
 
-                // If no lists or the worker is already running then skip it
-                if (!job.getKeywordListNames().isEmpty() && !job.isWorkerRunning()) {
-                    // Spawn a search thread for each job
-                    logger.log(Level.INFO, "Executing periodic search for search job {0}", job.getJobId());
-                    Searcher searcher = new Searcher(job);  // SwingWorker
-                    job.setCurrentSearcher(searcher); //save the ref
-                    searcher.execute(); //start thread
-                    job.setWorkerRunning(true);
-
+                /*
+                 * If there are no keywords to search for, or a search is
+                 * already running for this ingest job, skip kicking off a
+                 * search task.
+                 */
+                if (!searchJob.getKeywordListNames().isEmpty() && !searchJob.isWorkerRunning()) {
+                    logger.log(Level.INFO, String.format("Starting periodic search for ingest job %d", searchJob.getIngestJobId())); //NON-NLS
+                    Searcher searcher = new Searcher(searchJob);
+                    searchJob.setCurrentSearcher(searcher);
+                    searcher.execute();
+                    searchJob.setWorkerRunning(true);
                     try {
-                        // wait for the searcher to finish
                         searcher.get();
                     } catch (InterruptedException | ExecutionException ex) {
-                        logger.log(Level.SEVERE, "Error performing keyword search: {0}", ex.getMessage()); //NON-NLS
-                        services.postMessage(IngestMessage.createErrorMessage(KeywordSearchModuleFactory.getModuleName(),
-                                NbBundle.getMessage(this.getClass(),
-                                        "SearchRunner.Searcher.done.err.msg"), ex.getMessage()));
-                    }// catch and ignore if we were cancelled
-                      catch (java.util.concurrent.CancellationException ex) {
+                        logger.log(Level.SEVERE, String.format("Error perfoming periodic search for ingest job %d", searchJob.getIngestJobId()), ex); //NON-NLS
+                        /*
+                         * This resolves to a no-op if not running with a GUI.
+                         */
+                        services.postMessage(IngestMessage.createErrorMessage(
+                                KeywordSearchModuleFactory.getModuleName(),
+                                NbBundle.getMessage(this.getClass(), "SearchRunner.Searcher.done.err.msg"),
+                                ex.getMessage()));
+                    } catch (java.util.concurrent.CancellationException ex) {
+                        logger.log(Level.WARNING, String.format("Periodic search for ingest job %d cancelled", searchJob.getIngestJobId()), ex); //NON-NLS
                     }
+                    logger.log(Level.INFO, String.format("Finished periodic search for ingest job %d", searchJob.getIngestJobId())); //NON-NLS
                 }
             }
             stopWatch.stop();
-            logger.log(Level.INFO, "All periodic searches cumulatively took {0} secs", stopWatch.getElapsedTimeSecs()); //NON-NLS
-            
-            // calculate "hold off" time
-            recalculateUpdateIntervalTime(stopWatch.getElapsedTimeSecs()); // ELDEBUG
-            
+            logger.log(Level.INFO, "Periodic searches for current inget jobs cumulatively took {0} secs", stopWatch.getElapsedTimeSecs()); //NON-NLS
+
+            /*
+             * Adjust the interval between periodic searches based on the time
+             * these searches took.
+             */
+            recalculateUpdateIntervalTime(stopWatch.getElapsedTimeSecs());
+
             // schedule next PeriodicSearchTask
-            jobProcessingTaskFuture = jobProcessingExecutor.schedule(new PeriodicSearchTask(), currentUpdateIntervalMs, MILLISECONDS);
-            
-            // exit this thread
-            return;
+            periodicSearchTaskFuture = periodicSearchTaskExecutor.schedule(new PeriodicSearchTask(), currentUpdateIntervalMs, MILLISECONDS);
         }
-        
-        
+
         private void recalculateUpdateIntervalTime(long lastSerchTimeSec) {
             // If periodic search takes more than 1/4 of the current periodic search interval, then double the search interval
             if (lastSerchTimeSec * 1000 < currentUpdateIntervalMs / 4) {
@@ -319,34 +373,30 @@ final class IngestSearchRunner {
             }
             // double the search interval
             currentUpdateIntervalMs = currentUpdateIntervalMs * 2;
-            logger.log(Level.WARNING, "Last periodic search took {0} sec. Increasing search interval to {1} sec", new Object[]{lastSerchTimeSec, currentUpdateIntervalMs/1000});
+            logger.log(Level.WARNING, "Last periodic search took {0} sec. Increasing search interval to {1} sec", new Object[]{lastSerchTimeSec, currentUpdateIntervalMs / 1000});
             return;
         }
     }
 
     /**
-     * Data structure to keep track of keyword lists, current results, and
-     * search running status for each jobid
+     * A data structure to keep track of the keyword lists, interim and final
+     * results, and search running status for an ingest job.
      */
     private class SearchJobInfo {
 
         private final IngestJobContext jobContext;
-        private final long jobId;
-        private final long dataSourceId;
-        // mutable state:
         private volatile boolean workerRunning;
-        private List<String> keywordListNames; //guarded by SearchJobInfo.this
-
-        // Map of keyword to the object ids that contain a hit
-        private Map<Keyword, Set<Long>> currentResults; //guarded by SearchJobInfo.this
+        @GuardedBy("this")
+        private List<String> keywordListNames;
+        @GuardedBy("this")
+        private Map<Keyword, Set<Long>> currentResults; // Maps keywords to object ids of files with hits.
+        @GuardedBy("this")
         private IngestSearchRunner.Searcher currentSearcher;
         private AtomicLong moduleReferenceCount = new AtomicLong(0);
         private final Object finalSearchLock = new Object(); //used for a condition wait
 
         private SearchJobInfo(IngestJobContext jobContext, List<String> keywordListNames) {
             this.jobContext = jobContext;
-            this.jobId = jobContext.getJobId();
-            this.dataSourceId = jobContext.getDataSource().getId();
             this.keywordListNames = new ArrayList<>(keywordListNames);
             currentResults = new HashMap<>();
             workerRunning = false;
@@ -357,12 +407,12 @@ final class IngestSearchRunner {
             return jobContext;
         }
 
-        private long getJobId() {
-            return jobId;
+        private long getIngestJobId() {
+            return jobContext.getJobId();
         }
 
         private long getDataSourceId() {
-            return dataSourceId;
+            return jobContext.getDataSource().getId();
         }
 
         private synchronized List<String> getKeywordListNames() {
@@ -431,13 +481,13 @@ final class IngestSearchRunner {
                 finalSearchLock.notify();
             }
         }
+
     }
 
     /**
-     * Searcher responsible for searching the current index and writing results
-     * to blackboard and the inbox. Also, posts results to listeners as Ingest
-     * data events. Searches entire index, and keeps track of only new results
-     * to report and save. Runs as a background thread.
+     * A SwingWorker that searches the text index for a given collection of
+     * keywords, writes new hits to the blackboard, fires ingest events for the
+     * artifacts it creates, and adds messages to the ingest inbox for the user.
      */
     private final class Searcher extends SwingWorker<Object, Void> {
 
@@ -459,7 +509,6 @@ final class IngestSearchRunner {
             keywords = new ArrayList<>();
             keywordToList = new HashMap<>();
             keywordLists = new ArrayList<>();
-            //keywords are populated as searcher runs
         }
 
         Searcher(SearchJobInfo job, boolean finalRun) {
@@ -695,5 +744,7 @@ final class IngestSearchRunner {
 
             return newResults;
         }
+
     }
+
 }

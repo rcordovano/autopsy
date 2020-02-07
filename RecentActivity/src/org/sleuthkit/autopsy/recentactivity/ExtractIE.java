@@ -121,9 +121,7 @@ class ExtractIE extends Extract {
                             this.getName()));
             return;
         }
-
         if (favoritesFiles.isEmpty()) {
-            logger.log(Level.INFO, "Didn't find any IE bookmark files."); //NON-NLS
             return;
         }
 
@@ -219,9 +217,7 @@ class ExtractIE extends Extract {
                     NbBundle.getMessage(this.getClass(), "ExtractIE.getCookie.errMsg.errGettingFile", this.getName()));
             return;
         }
-
         if (cookiesFiles.isEmpty()) {
-            logger.log(Level.INFO, "Didn't find any IE cookies files."); //NON-NLS
             return;
         }
 
@@ -313,10 +309,7 @@ class ExtractIE extends Extract {
             logger.log(Level.WARNING, "Error fetching 'index.data' files for Internet Explorer history."); //NON-NLS
             return;
         }
-
         if (indexFiles.isEmpty()) {
-            String msg = NbBundle.getMessage(this.getClass(), "ExtractIE.getHistory.errMsg.noHistFiles");
-            logger.log(Level.INFO, msg);
             return;
         }
 

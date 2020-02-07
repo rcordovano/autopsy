@@ -522,13 +522,10 @@ public final class DataSourceIngestJob {
          * Schedule the first stage tasks.
          */
         if (this.hasFirstStageDataSourceIngestPipeline() && this.hasFileIngestPipeline()) {
-            logInfoMessage("Scheduling first stage data source and file level analysis tasks"); //NON-NLS
             DataSourceIngestJob.taskScheduler.scheduleIngestTasks(this);
         } else if (this.hasFirstStageDataSourceIngestPipeline()) {
-            logInfoMessage("Scheduling first stage data source level analysis tasks"); //NON-NLS
             DataSourceIngestJob.taskScheduler.scheduleDataSourceIngestTask(this);
         } else {
-            logInfoMessage("Scheduling file level analysis tasks, no first stage data source level analysis configured"); //NON-NLS
             DataSourceIngestJob.taskScheduler.scheduleFileIngestTasks(this, this.files);
 
             /**
@@ -555,7 +552,6 @@ public final class DataSourceIngestJob {
         synchronized (this.dataSourceIngestPipelineLock) {
             this.currentDataSourceIngestPipeline = this.secondStageDataSourceIngestPipeline;
         }
-        logInfoMessage("Scheduling second stage data source level analysis tasks"); //NON-NLS        
         DataSourceIngestJob.taskScheduler.scheduleDataSourceIngestTask(this);
     }
 

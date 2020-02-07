@@ -1,7 +1,7 @@
 /*
  * Autopsy Forensic Browser
  *
- * Copyright 2012-2019 Basis Technology Corp.
+ * Copyright 2012-2020 Basis Technology Corp.
  * Contact: carrier <at> sleuthkit <dot> org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -714,10 +714,10 @@ public class Case {
             Case closedCase = currentCase;
             try {
                 eventPublisher.publishLocally(new AutopsyEvent(Events.CURRENT_CASE.toString(), closedCase, null));
-                logger.log(Level.INFO, "Closing current case {0} ({1}) in {2}", new Object[]{closedCase.getDisplayName(), closedCase.getName(), closedCase.getCaseDirectory()}); //NON-NLS
+                logger.log(Level.INFO, "Closing {0} ({1}) in {2}", new Object[]{closedCase.getDisplayName(), closedCase.getName(), closedCase.getCaseDirectory()}); //NON-NLS
                 currentCase = null;
                 closedCase.doCloseCaseAction();
-                logger.log(Level.INFO, "Closed current case {0} ({1}) in {2}", new Object[]{closedCase.getDisplayName(), closedCase.getName(), closedCase.getCaseDirectory()}); //NON-NLS
+                logger.log(Level.INFO, "Closed {0} ({1}) in {2}", new Object[]{closedCase.getDisplayName(), closedCase.getName(), closedCase.getCaseDirectory()}); //NON-NLS
             } catch (CaseActionException ex) {
                 logger.log(Level.SEVERE, String.format("Error closing current case %s (%s) in %s", closedCase.getDisplayName(), closedCase.getName(), closedCase.getCaseDirectory()), ex); //NON-NLS                
                 throw ex;
@@ -867,7 +867,7 @@ public class Case {
                 }
             }
             try {
-                logger.log(Level.INFO, "Opening {0} ({1}) in {2} as the current case", new Object[]{newCurrentCase.getDisplayName(), newCurrentCase.getName(), newCurrentCase.getCaseDirectory()}); //NON-NLS
+                logger.log(Level.INFO, "Opening case {0} ({1}) in {2}", new Object[]{newCurrentCase.getDisplayName(), newCurrentCase.getName(), newCurrentCase.getCaseDirectory()}); //NON-NLS
                 String progressIndicatorTitle;
                 CaseAction<ProgressIndicator, Object, Void> openCaseAction;
                 if (isNewCase) {
@@ -879,7 +879,7 @@ public class Case {
                 }
                 newCurrentCase.doOpenCaseAction(progressIndicatorTitle, openCaseAction, CaseLockType.SHARED, true, null);
                 currentCase = newCurrentCase;
-                logger.log(Level.INFO, "Opened {0} ({1}) in {2} as the current case", new Object[]{newCurrentCase.getDisplayName(), newCurrentCase.getName(), newCurrentCase.getCaseDirectory()}); //NON-NLS
+                logger.log(Level.INFO, "Opened case {0} ({1}) in {2} as the current case", new Object[]{newCurrentCase.getDisplayName(), newCurrentCase.getName(), newCurrentCase.getCaseDirectory()}); //NON-NLS
                 if (RuntimeProperties.runningWithGUI()) {
                     updateGUIForCaseOpened(newCurrentCase);
                 }

@@ -113,7 +113,6 @@ class AndroidIngestModule(DataSourceIngestModule):
                      sbrowser.SBrowserAnalyzer(), operabrowser.OperaAnalyzer(),
                      oruxmaps.OruxMapsAnalyzer(),
                      installedapps.InstalledApplicationsAnalyzer()]
-        self.log(Level.INFO, "running " + str(len(analyzers)) + " analyzers")
         progressBar.switchToDeterminate(len(analyzers))
 
         n = 0

@@ -2,12 +2,8 @@
  *
  * Autopsy Forensic Browser
  *
- * Copyright 2019 Basis Technology Corp.
- *
- * Copyright 2012 42six Solutions.
- * Contact: aebadirad <at> 42six <dot> com
- * Project Contact/Architect: carrier <at> sleuthkit <dot> org
- *
+ * Copyright 2019-2020 Basis Technology Corp.
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -421,9 +417,10 @@ final class ExtractRecycleBin extends Extract {
         try {
             tskCase.addBlackboardArtifactType(RECYCLE_BIN_ARTIFACT_NAME, "Recycle Bin"); //NON-NLS
         } catch (TskDataException ex) {
-            logger.log(Level.INFO, String.format("%s may have already been defined for this case", RECYCLE_BIN_ARTIFACT_NAME));
+            /*
+             * The type has already been added. No worries.
+             */ 
         }
-
     }
 
     /**

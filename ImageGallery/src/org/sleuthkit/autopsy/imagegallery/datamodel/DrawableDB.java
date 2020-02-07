@@ -575,14 +575,6 @@ public final class DrawableDB {
                 statement.execute("PRAGMA auto_vacuum = 0"); //NON-NLS
             }
 
-            try {
-                logger.log(Level.INFO, String.format("sqlite-jdbc version %s loaded in %s mode", //NON-NLS
-                        SQLiteJDBCLoader.getVersion(), SQLiteJDBCLoader.isNativeMode()
-                        ? "native" : "pure-java")); //NON-NLS
-            } catch (Exception exception) {
-                logger.log(Level.SEVERE, "exception while checking sqlite-jdbc version and mode", exception); //NON-NLS
-            }
-
         } finally {
             dbWriteUnlock();
         }

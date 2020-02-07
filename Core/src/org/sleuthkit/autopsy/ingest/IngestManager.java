@@ -1,7 +1,7 @@
 /*
  * Autopsy Forensic Browser
  *
- * Copyright 2012-2019 Basis Technology Corp.
+ * Copyright 2012-2020 Basis Technology Corp.
  * Contact: carrier <at> sleuthkit <dot> org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -403,7 +403,15 @@ public class IngestManager implements IngestProgressSnapshotProvider {
         synchronized (ingestJobsById) {
             ingestJobsById.put(job.getId(), job);
         }
+
+        /*
+         * RC: Because we did not implement having more than one
+         * DataSourceIngestJob per IngestJob, there is a tendency to equate the
+         * IDs of the two objects in logging. This could become confusing if
+         * there ever is more than one data source per ingest job.
+         */
         IngestManager.logger.log(Level.INFO, "Starting ingest job {0}", job.getId()); //NON-NLS
+
         errors = job.start();
         if (errors.isEmpty()) {
             this.fireIngestJobStarted(job.getId());
@@ -491,10 +499,11 @@ public class IngestManager implements IngestProgressSnapshotProvider {
     public void addIngestJobEventListener(final PropertyChangeListener listener) {
         jobEventPublisher.addSubscriber(INGEST_JOB_EVENT_NAMES, listener);
     }
-    
+
     /**
-     * Adds an ingest job event property change listener for the given event types.
-     * 
+     * Adds an ingest job event property change listener for the given event
+     * types.
+     *
      * @param eventTypes The event types to listen for
      * @param listener   The PropertyChangeListener to be added
      */
@@ -512,18 +521,18 @@ public class IngestManager implements IngestProgressSnapshotProvider {
     public void removeIngestJobEventListener(final PropertyChangeListener listener) {
         jobEventPublisher.removeSubscriber(INGEST_JOB_EVENT_NAMES, listener);
     }
-    
+
     /**
      * Removes an ingest job event property change listener.
      *
      * @param eventTypes The event types to stop listening for
-     * @param listener The PropertyChangeListener to be removed.
+     * @param listener   The PropertyChangeListener to be removed.
      */
     public void removeIngestJobEventListener(Set<IngestJobEvent> eventTypes, final PropertyChangeListener listener) {
         eventTypes.forEach((IngestJobEvent event) -> {
             jobEventPublisher.removeSubscriber(event.toString(), listener);
         });
-    }   
+    }
 
     /**
      * Adds an ingest module event property change listener.
@@ -535,8 +544,9 @@ public class IngestManager implements IngestProgressSnapshotProvider {
     }
 
     /**
-     * Adds an ingest module event property change listener for given event types.
-     * 
+     * Adds an ingest module event property change listener for given event
+     * types.
+     *
      * @param eventTypes The event types to listen for
      * @param listener   The PropertyChangeListener to be removed.
      */
@@ -545,7 +555,7 @@ public class IngestManager implements IngestProgressSnapshotProvider {
             moduleEventPublisher.addSubscriber(event.toString(), listener);
         });
     }
-    
+
     /**
      * Removes an ingest module event property change listener.
      *
@@ -554,16 +564,16 @@ public class IngestManager implements IngestProgressSnapshotProvider {
     public void removeIngestModuleEventListener(final PropertyChangeListener listener) {
         moduleEventPublisher.removeSubscriber(INGEST_MODULE_EVENT_NAMES, listener);
     }
-    
+
     /**
      * Removes an ingest module event property change listener.
-     * 
+     *
      * @param eventTypes The event types to stop listening for
      * @param listener   The PropertyChangeListener to be removed.
      */
     public void removeIngestModuleEventListener(Set<IngestModuleEvent> eventTypes, final PropertyChangeListener listener) {
         moduleEventPublisher.removeSubscriber(INGEST_MODULE_EVENT_NAMES, listener);
-    }    
+    }
 
     /**
      * Publishes an ingest job event signifying an ingest job started.

@@ -164,12 +164,10 @@ public class DataSourceIntegrityIngestModule implements DataSourceIngestModule {
         
         // If that mode was not enabled by the user, exit
         if (mode.equals(Mode.COMPUTE) && ! this.computeHashes) {
-            logger.log(Level.INFO, "Not computing hashes for {0} since the option was disabled", imgName); //NON-NLS
             services.postMessage(IngestMessage.createMessage(MessageType.INFO, DataSourceIntegrityModuleFactory.getModuleName(),
                     Bundle.DataSourceIntegrityIngestModule_process_skipCompute(imgName)));
             return ProcessResult.OK;
         } else if (mode.equals(Mode.VERIFY) && ! this.verifyHashes) {
-            logger.log(Level.INFO, "Not verifying hashes for {0} since the option was disabled", imgName); //NON-NLS
             services.postMessage(IngestMessage.createMessage(MessageType.INFO, DataSourceIntegrityModuleFactory.getModuleName(),
                     Bundle.DataSourceIntegrityIngestModule_process_skipVerify(imgName)));
             return ProcessResult.OK;
@@ -204,11 +202,6 @@ public class DataSourceIntegrityIngestModule implements DataSourceIngestModule {
         // Casting to double to capture decimals
         int totalChunks = (int) Math.ceil((double) size / (double) chunkSize);
 
-        if (mode.equals(Mode.VERIFY)) {
-            logger.log(Level.INFO, "Starting hash verification of {0}", img.getName()); //NON-NLS
-        } else {
-            logger.log(Level.INFO, "Starting hash calculation for {0}", img.getName()); //NON-NLS
-        }
         services.postMessage(IngestMessage.createMessage(MessageType.INFO, DataSourceIntegrityModuleFactory.getModuleName(),
         NbBundle.getMessage(this.getClass(),
                 "DataSourceIntegrityIngestModule.process.startingImg",
@@ -251,7 +244,6 @@ public class DataSourceIntegrityIngestModule implements DataSourceIngestModule {
         // Produce the final hashes
         for(HashData hashData:hashDataList) {
             hashData.calculatedHash = DatatypeConverter.printHexBinary(hashData.digest.digest()).toLowerCase();
-            logger.log(Level.INFO, "Hash calculated from {0}: {1}", new Object[]{imgName, hashData.calculatedHash}); //NON-NLS
         }
         
         if (mode.equals(Mode.VERIFY)) {

@@ -1,7 +1,7 @@
 /*
  * Autopsy Forensic Browser
  * 
- * Copyright 2011-2016 Basis Technology Corp.
+ * Copyright 2011-2020 Basis Technology Corp.
  * Contact: carrier <at> sleuthkit <dot> org
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.logging.Level;
 import org.openide.util.NbBundle;
 import org.sleuthkit.autopsy.coreutils.Logger;
-import org.sleuthkit.autopsy.coreutils.MessageNotifyUtil;
 import org.sleuthkit.datamodel.Content;
 
 /**
@@ -109,9 +108,9 @@ final class DataSourceIngestPipeline {
                     this.job.updateDataSourceIngestProgressBarDisplayName(displayName);
                     this.job.switchDataSourceIngestProgressBarToIndeterminate();
                     DataSourceIngestPipeline.ingestManager.setIngestTaskProgress(task, module.getDisplayName());
-                    logger.log(Level.INFO, "{0} analysis of {1} (jobId={2}) starting", new Object[]{module.getDisplayName(), this.job.getDataSource().getName(), this.job.getId()}); //NON-NLS
+                    logger.log(Level.INFO, "Starting {0} analysis of {1} (jobId={2}) ", new Object[]{module.getDisplayName(), this.job.getDataSource().getName(), this.job.getId()}); //NON-NLS
                     module.process(dataSource, new DataSourceIngestModuleProgress(this.job));
-                    logger.log(Level.INFO, "{0} analysis of {1} (jobId={2}) finished", new Object[]{module.getDisplayName(), this.job.getDataSource().getName(), this.job.getId()}); //NON-NLS
+                    logger.log(Level.INFO, "Finished {0} analysis of {1} (jobId={2})", new Object[]{module.getDisplayName(), this.job.getDataSource().getName(), this.job.getId()}); //NON-NLS
                 } catch (Throwable ex) { // Catch-all exception firewall
                     errors.add(new IngestModuleError(module.getDisplayName(), ex));
                 }

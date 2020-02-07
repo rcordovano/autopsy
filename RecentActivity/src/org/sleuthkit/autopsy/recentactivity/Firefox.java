@@ -138,10 +138,7 @@ class Firefox extends Extract {
             this.addErrorMessage(this.getName() + ": " + msg);
             return;
         }
-
         if (historyFiles.isEmpty()) {
-            String msg = NbBundle.getMessage(this.getClass(), "Firefox.getHistory.errMsg.noFilesFound");
-            logger.log(Level.INFO, msg);
             return;
         }
 
@@ -241,9 +238,7 @@ class Firefox extends Extract {
             this.addErrorMessage(this.getName() + ": " + msg);
             return;
         }
-
         if (bookmarkFiles.isEmpty()) {
-            logger.log(Level.INFO, "Didn't find any firefox bookmark files."); //NON-NLS
             return;
         }
 
@@ -333,9 +328,7 @@ class Firefox extends Extract {
             this.addErrorMessage(this.getName() + ": " + msg);
             return;
         }
-
         if (cookiesFiles.isEmpty()) {
-            logger.log(Level.INFO, "Didn't find any Firefox cookie files."); //NON-NLS
             return;
         }
 
@@ -453,9 +446,7 @@ class Firefox extends Extract {
             this.addErrorMessage(this.getName() + ": " + msg);
             return;
         }
-
         if (downloadsFiles.isEmpty()) {
-            logger.log(Level.INFO, "Didn't find any pre-version-24.0 Firefox download files."); //NON-NLS
             return;
         }
 
@@ -590,9 +581,7 @@ class Firefox extends Extract {
             this.addErrorMessage(this.getName() + ": " + msg);
             return;
         }
-
         if (downloadsFiles.isEmpty()) {
-            logger.log(Level.INFO, "Didn't find any version-24.0 Firefox download files."); //NON-NLS
             return;
         }
 
@@ -718,7 +707,7 @@ class Firefox extends Extract {
         FileManager fileManager = currentCase.getServices().getFileManager();
         List<AbstractFile> formHistoryFiles;
        
-        // Some fields are just noisy and can me excluded
+        // Some fields are just noisy and can be excluded
         Set<String> excludedFieldNames = new HashSet<>(Arrays.asList(
                 "it",   // some kind of timestamp
                 "ts"    // some kind of timestamp
@@ -732,10 +721,7 @@ class Firefox extends Extract {
             this.addErrorMessage(this.getName() + ": " + msg);
             return;
         }
-
         if (formHistoryFiles.isEmpty()) {
-            String msg = NbBundle.getMessage(this.getClass(), "Firefox.getFormsAutofill.errMsg.noFilesFound");
-            logger.log(Level.INFO, msg);
             return;
         }
 
@@ -844,9 +830,7 @@ class Firefox extends Extract {
             this.addErrorMessage(this.getName() + ": " + msg);
             return;
         }
-
         if (autofillProfilesFiles.isEmpty()) {
-            logger.log(Level.INFO, "Didn't find any Firefox Autofill Profiles files."); //NON-NLS
             return;
         }
 

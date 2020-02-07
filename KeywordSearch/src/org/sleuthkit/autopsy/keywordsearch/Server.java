@@ -1,7 +1,7 @@
 /*
  * Autopsy Forensic Browser
  *
- * Copyright 2011-2019 Basis Technology Corp.
+ * Copyright 2011-2020 Basis Technology Corp.
  * Contact: carrier <at> sleuthkit <dot> org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -603,7 +603,7 @@ public class Server {
             // Close any open core before stopping server
             closeCore();
         } catch (KeywordSearchModuleException e) {
-            logger.log(Level.WARNING, "Failed to close core: ", e); //NON-NLS
+            logger.log(Level.WARNING, "Failed to close core", e); //NON-NLS
         }
 
         try {
@@ -658,7 +658,6 @@ public class Server {
             //TODO handle timeout in cases when some other type of server on that port
             connectToSolrServer(localSolrServer);
 
-            logger.log(Level.INFO, "Solr server is running"); //NON-NLS
         } catch (SolrServerException ex) {
 
             Throwable cause = ex.getRootCause();
