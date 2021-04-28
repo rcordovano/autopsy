@@ -18,20 +18,24 @@
  */
 package org.sleuthkit.autopsy.casemodule.events;
 
+import java.util.List;
 import org.sleuthkit.autopsy.casemodule.Case;
-import org.sleuthkit.autopsy.events.AutopsyEvent;
+import org.sleuthkit.datamodel.Host;
 
 /**
- *  Event published when an OsAccount is deleted.
- * 
- * oldValue will contain the objectId of the account that was removed. newValue
- * will be null.
+ * Event fired when hosts are changed.
  */
-public final class OsAccountDeletedEvent extends AutopsyEvent {
+public class HostsUpdatedEvent extends HostsEvent {
 
     private static final long serialVersionUID = 1L;
-    
-    public OsAccountDeletedEvent(Long osAccountObjectId) {
-        super(Case.Events.OS_ACCOUNT_REMOVED.toString(), osAccountObjectId, null);
-    }  
+
+    /**
+     * Main constructor.
+     *
+     * @param dataModelObjects The new values for the hosts that have been
+     * changed.
+     */
+    public HostsUpdatedEvent(List<Host> dataModelObjects) {
+        super(Case.Events.HOSTS_CHANGED.name(), dataModelObjects);
+    }
 }

@@ -29,7 +29,7 @@ import org.sleuthkit.datamodel.TskCoreException;
 /**
  *  Parent class for specific OsAccount event classes.
  */
-class OsAccountEvent extends TskDataModelChangeEvent<OsAccount> {
+class OsAccountsEvent extends TskDataModelChangedEvent<OsAccount> {
 
     private static final long serialVersionUID = 1L;
     
@@ -39,8 +39,8 @@ class OsAccountEvent extends TskDataModelChangeEvent<OsAccount> {
      * @param eventName The name of the event.
      * @param account   The OsAccount the event applies to.
      */
-    OsAccountEvent(String eventName, OsAccount account) {
-        super(eventName, Stream.of(account.getId()).collect(Collectors.toList()), Stream.of(account).collect(Collectors.toList()));
+    OsAccountsEvent(String eventName, List<OsAccount> accounts) {
+        super(eventName, accounts, OsAccount::getId);
     }
     
     /**

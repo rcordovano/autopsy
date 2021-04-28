@@ -18,18 +18,32 @@
  */
 package org.sleuthkit.autopsy.casemodule.events;
 
+import java.util.Collections;
+import java.util.List;
 import org.sleuthkit.autopsy.casemodule.Case;
 import org.sleuthkit.datamodel.OsAccount;
+import org.sleuthkit.datamodel.SleuthkitCase;
+import org.sleuthkit.datamodel.TskCoreException;
 
 /**
- *  Event published when an OsAccount is added to a case.
+ * An event published when OS accounts are deleted from a case.
  */
-public final class OsAccountAddedEvent extends OsAccountEvent {
+public final class OsAccountsDeletedEvent extends TskDataModelChangedEvent<OsAccount> {
 
     private static final long serialVersionUID = 1L;
-    
-    public OsAccountAddedEvent(OsAccount account) {
-        super(Case.Events.OS_ACCOUNT_ADDED.toString(), account);
+
+    /**
+     * Constructs an event published when OS accounts are deleted from a case.
+     *
+     * @param osAccountObjectIds The object IDs of the deleted accounts.
+     */
+    public OsAccountsDeletedEvent(List<Long> osAccountObjectIds) {
+        super(Case.Events.OS_ACCOUNT_REMOVED.toString(), osAccountObjectIds);
+    }
+
+    @Override
+    protected List<OsAccount> getDataModelObjects(SleuthkitCase caseDb, List<Long> ids) throws TskCoreException {
+        return Collections.emptyList();
     }
 
 }

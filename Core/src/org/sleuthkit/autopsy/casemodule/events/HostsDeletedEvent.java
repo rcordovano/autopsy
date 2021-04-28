@@ -18,22 +18,34 @@
  */
 package org.sleuthkit.autopsy.casemodule.events;
 
+import java.util.Collections;
 import java.util.List;
 import org.sleuthkit.autopsy.casemodule.Case;
 import org.sleuthkit.datamodel.Host;
+import org.sleuthkit.datamodel.SleuthkitCase;
+import org.sleuthkit.datamodel.TskCoreException;
 
 /**
- * Event fired when hosts are removed.
+ * Event fired when hosts are deleted.
  */
-public class HostsRemovedEvent extends HostsEvent {
-    
+public class HostsDeletedEvent extends TskDataModelChangedEvent<Host> {
+
     private static final long serialVersionUID = 1L;
-    
+
     /**
      * Main constructor.
-     * @param dataModelObjects The list of hosts that have been deleted.
+     *
+     * @param dataModelObjectIds The unique numeric IDs (TSK object IDs, case
+     *                           database row IDs, etc.) of the Hosts that have
+     *                           been deleted.
      */
-    public HostsRemovedEvent(List<Host> dataModelObjects) {
-        super(Case.Events.HOSTS_DELETED.name(), dataModelObjects);
+    public HostsDeletedEvent(List<Long> dataModelObjectIds) {
+        super(Case.Events.HOSTS_DELETED.name(), dataModelObjectIds);
     }
+
+    @Override
+    protected List<Host> getDataModelObjects(SleuthkitCase caseDb, List<Long> ids) throws TskCoreException {
+        return Collections.emptyList();
+    }
+
 }

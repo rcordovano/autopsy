@@ -18,17 +18,24 @@
  */
 package org.sleuthkit.autopsy.casemodule.events;
 
+import java.util.List;
 import org.sleuthkit.autopsy.casemodule.Case;
 import org.sleuthkit.datamodel.OsAccount;
 
 /**
- *  Event published when an OsAccount is updated.
+ * Event published when OS accounts in the case have been updated.
  */
-public final class OsAccountChangedEvent extends OsAccountEvent {
+public final class OsAccountsUpdatedEvent extends OsAccountsEvent {
 
     private static final long serialVersionUID = 1L;
-    
-    public OsAccountChangedEvent(OsAccount account) {
-        super(Case.Events.OS_ACCOUNT_CHANGED.toString(), account);
-    }  
+
+    /**
+     * Constructs an event published when OS accounts in the case have been
+     * updated.
+     *
+     * @param accounts The accounts.
+     */
+    public OsAccountsUpdatedEvent(List<OsAccount> accounts) {
+        super(Case.Events.OS_ACCOUNT_CHANGED.toString(), accounts);
+    }
 }
