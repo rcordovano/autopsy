@@ -1,0 +1,156 @@
+MISSING @SINCE TAG: org.sleuthkit.datamodel.AbstractAttribute Class
+MISSING @SINCE TAG: org.sleuthkit.datamodel.AggregateScoresChangedEvent Class
+MISSING @SINCE TAG: org.sleuthkit.datamodel.AnalysisResult Class
+MISSING @SINCE TAG: org.sleuthkit.datamodel.AnalysisResultAdded Class
+MISSING @SINCE TAG: org.sleuthkit.datamodel.Attribute Class
+MISSING @SINCE TAG: org.sleuthkit.datamodel.BlackboardArtifact.Category Class
+MISSING @SINCE TAG: org.sleuthkit.datamodel.DataArtifact Class
+MISSING @SINCE TAG: org.sleuthkit.datamodel.Host Class
+MISSING @SINCE TAG: org.sleuthkit.datamodel.Host.HostDbStatus Class
+MISSING @SINCE TAG: org.sleuthkit.datamodel.HostAddress Class
+MISSING @SINCE TAG: org.sleuthkit.datamodel.HostAddress.HostAddressType Class
+MISSING @SINCE TAG: org.sleuthkit.datamodel.HostAddressManager Class
+MISSING @SINCE TAG: org.sleuthkit.datamodel.HostManager Class
+MISSING @SINCE TAG: org.sleuthkit.datamodel.OsAccount Class
+MISSING @SINCE TAG: org.sleuthkit.datamodel.OsAccount.OsAccountAttribute Class
+MISSING @SINCE TAG: org.sleuthkit.datamodel.OsAccount.OsAccountDbStatus Class
+MISSING @SINCE TAG: org.sleuthkit.datamodel.OsAccount.OsAccountStatus Class
+MISSING @SINCE TAG: org.sleuthkit.datamodel.OsAccount.OsAccountType Class
+MISSING @SINCE TAG: org.sleuthkit.datamodel.OsAccountInstance Class
+MISSING @SINCE TAG: org.sleuthkit.datamodel.OsAccountInstance.OsAccountInstanceType Class
+MISSING @SINCE TAG: org.sleuthkit.datamodel.OsAccountManager Class
+MISSING @SINCE TAG: org.sleuthkit.datamodel.OsAccountManager.NotUserSIDException Class
+MISSING @SINCE TAG: org.sleuthkit.datamodel.OsAccountManager.OsAccountUpdateResult Class
+MISSING @SINCE TAG: org.sleuthkit.datamodel.OsAccountManager.OsAccountUpdateStatus Class
+MISSING @SINCE TAG: org.sleuthkit.datamodel.OsAccountRealm Class
+MISSING @SINCE TAG: org.sleuthkit.datamodel.OsAccountRealm.RealmDbStatus Class
+MISSING @SINCE TAG: org.sleuthkit.datamodel.OsAccountRealm.RealmScope Class
+MISSING @SINCE TAG: org.sleuthkit.datamodel.OsAccountRealm.ScopeConfidence Class
+MISSING @SINCE TAG: org.sleuthkit.datamodel.OsAccountRealmManager Class
+MISSING @SINCE TAG: org.sleuthkit.datamodel.OsAccountRealmManager.OsRealmUpdateResult Class
+MISSING @SINCE TAG: org.sleuthkit.datamodel.OsAccountRealmManager.OsRealmUpdateStatus Class
+MISSING @SINCE TAG: org.sleuthkit.datamodel.Person Class
+MISSING @SINCE TAG: org.sleuthkit.datamodel.PersonManager Class
+MISSING @SINCE TAG: org.sleuthkit.datamodel.Score Class
+MISSING @SINCE TAG: org.sleuthkit.datamodel.Score.MethodCategory Class
+MISSING @SINCE TAG: org.sleuthkit.datamodel.Score.Significance Class
+MISSING @SINCE TAG: org.sleuthkit.datamodel.ScoreChange Class
+MISSING @SINCE TAG: org.sleuthkit.datamodel.ScoringManager Class
+MISSING @SINCE TAG: org.sleuthkit.datamodel.TskDataSourceEvent Interface
+MISSING @SINCE TAG: org.sleuthkit.datamodel.TskEvent Interface
+MISSING @SINCE TAG: org.sleuthkit.datamodel.TskEvent.AnalysisResultsDeletedTskEvent Class
+MISSING @SINCE TAG: org.sleuthkit.datamodel.TskEvent.HostsAddedTskEvent Class
+MISSING @SINCE TAG: org.sleuthkit.datamodel.TskEvent.HostsChangedTskEvent Class
+MISSING @SINCE TAG: org.sleuthkit.datamodel.TskEvent.HostsDeletedTskEvent Class
+MISSING @SINCE TAG: org.sleuthkit.datamodel.TskEvent.HostTskEvent Class
+MISSING @SINCE TAG: org.sleuthkit.datamodel.TskEvent.OsAccountsAddedTskEvent Class
+MISSING @SINCE TAG: org.sleuthkit.datamodel.TskEvent.OsAccountsChangedTskEvent Class
+MISSING @SINCE TAG: org.sleuthkit.datamodel.TskEvent.OsAccountsDeletedTskEvent Class
+MISSING @SINCE TAG: org.sleuthkit.datamodel.TskEvent.PersonsAddedTskEvent Class
+MISSING @SINCE TAG: org.sleuthkit.datamodel.TskEvent.PersonsChangedTskEvent Class
+MISSING @SINCE TAG: org.sleuthkit.datamodel.TskEvent.PersonsDeletedTskEvent Class
+MISSING @SINCE TAG: org.sleuthkit.datamodel.TskEvent.PersonsTskEvent Class
+MISSING @SINCE TAG: org.sleuthkit.datamodel.UnsupportedContent Class
+MISSING @SINCE TAG: org.sleuthkit.datamodel.BlackboardArtifact.Type Constructor (int, java.lang.String, java.lang.String, org.sleuthkit.datamodel.BlackboardArtifact.Category)
+MISSING @SINCE TAG: org.sleuthkit.datamodel.AbstractFile Method addAttributes(java.util.Collection<org.sleuthkit.datamodel.Attribute>, org.sleuthkit.datamodel.SleuthkitCase.CaseDbTransaction)
+MISSING @SINCE TAG: org.sleuthkit.datamodel.BlackboardArtifact Method addAttributes(java.util.Collection<org.sleuthkit.datamodel.BlackboardAttribute>, org.sleuthkit.datamodel.SleuthkitCase.CaseDbTransaction)
+MISSING @SINCE TAG: org.sleuthkit.datamodel.SleuthkitCase Method addFileSystemFile(long, long, java.lang.String, long, int, org.sleuthkit.datamodel.TskData.TSK_FS_ATTR_TYPE_ENUM, int, org.sleuthkit.datamodel.TskData.TSK_FS_NAME_FLAG_ENUM, short, long, long, long, long, long, java.lang.String, java.lang.String, java.lang.String, boolean, org.sleuthkit.datamodel.Content, java.lang.String, org.sleuthkit.datamodel.OsAccount, java.util.List<org.sleuthkit.datamodel.Attribute>, org.sleuthkit.datamodel.SleuthkitCase.CaseDbTransaction)
+MISSING @SINCE TAG: org.sleuthkit.datamodel.SleuthkitCase Method addImage(org.sleuthkit.datamodel.TskData.TSK_IMG_TYPE_ENUM, long, long, java.lang.String, java.util.List<java.lang.String>, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, org.sleuthkit.datamodel.Host, org.sleuthkit.datamodel.SleuthkitCase.CaseDbTransaction)
+MISSING @SINCE TAG: org.sleuthkit.datamodel.SleuthkitCase Method addImageInfo(long, java.util.List<java.lang.String>, java.lang.String, org.sleuthkit.datamodel.Host)
+MISSING @SINCE TAG: org.sleuthkit.datamodel.SleuthkitJNI Method addImageToDatabase(org.sleuthkit.datamodel.SleuthkitCase, java.lang.String[], int, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, org.sleuthkit.datamodel.Host)
+MISSING @SINCE TAG: org.sleuthkit.datamodel.SleuthkitCase Method addLocalFilesDataSource(java.lang.String, java.lang.String, java.lang.String, org.sleuthkit.datamodel.Host, org.sleuthkit.datamodel.SleuthkitCase.CaseDbTransaction)
+MISSING @SINCE TAG: org.sleuthkit.datamodel.Blackboard Method deleteAnalysisResult(long, org.sleuthkit.datamodel.SleuthkitCase.CaseDbTransaction)
+MISSING @SINCE TAG: org.sleuthkit.datamodel.Blackboard Method deleteAnalysisResult(org.sleuthkit.datamodel.AnalysisResult)
+MISSING @SINCE TAG: org.sleuthkit.datamodel.DataSource Method getAcquisitionToolName()
+MISSING @SINCE TAG: org.sleuthkit.datamodel.Image Method getAcquisitionToolName()
+MISSING @SINCE TAG: org.sleuthkit.datamodel.LocalFilesDataSource Method getAcquisitionToolName()
+MISSING @SINCE TAG: org.sleuthkit.datamodel.DataSource Method getAcquisitionToolSettings()
+MISSING @SINCE TAG: org.sleuthkit.datamodel.Image Method getAcquisitionToolSettings()
+MISSING @SINCE TAG: org.sleuthkit.datamodel.LocalFilesDataSource Method getAcquisitionToolSettings()
+MISSING @SINCE TAG: org.sleuthkit.datamodel.DataSource Method getAcquisitionToolVersion()
+MISSING @SINCE TAG: org.sleuthkit.datamodel.Image Method getAcquisitionToolVersion()
+MISSING @SINCE TAG: org.sleuthkit.datamodel.LocalFilesDataSource Method getAcquisitionToolVersion()
+NO DOC BLOCK: org.sleuthkit.datamodel.AbstractContent Method getAggregateScore()
+NO DOC BLOCK: org.sleuthkit.datamodel.BlackboardArtifact Method getAggregateScore()
+MISSING @SINCE TAG: org.sleuthkit.datamodel.Content Method getAggregateScore()
+NO DOC BLOCK: org.sleuthkit.datamodel.Report Method getAggregateScore()
+NO DOC BLOCK: org.sleuthkit.datamodel.AbstractContent Method getAllAnalysisResults()
+NO DOC BLOCK: org.sleuthkit.datamodel.BlackboardArtifact Method getAllAnalysisResults()
+MISSING @SINCE TAG: org.sleuthkit.datamodel.Content Method getAllAnalysisResults()
+NO DOC BLOCK: org.sleuthkit.datamodel.Report Method getAllAnalysisResults()
+NO DOC BLOCK: org.sleuthkit.datamodel.AbstractContent Method getAnalysisResults(org.sleuthkit.datamodel.BlackboardArtifact.Type)
+MISSING @SINCE TAG: org.sleuthkit.datamodel.Blackboard Method getAnalysisResults(long)
+MISSING @SINCE TAG: org.sleuthkit.datamodel.Blackboard Method getAnalysisResults(long, int)
+NO DOC BLOCK: org.sleuthkit.datamodel.BlackboardArtifact Method getAnalysisResults(org.sleuthkit.datamodel.BlackboardArtifact.Type)
+MISSING @SINCE TAG: org.sleuthkit.datamodel.Content Method getAnalysisResults(org.sleuthkit.datamodel.BlackboardArtifact.Type)
+NO DOC BLOCK: org.sleuthkit.datamodel.Report Method getAnalysisResults(org.sleuthkit.datamodel.BlackboardArtifact.Type)
+MISSING @SINCE TAG: org.sleuthkit.datamodel.Blackboard Method getAnalysisResultsWhere(java.lang.String)
+MISSING @SINCE TAG: org.sleuthkit.datamodel.AbstractFile Method getAttributes()
+MISSING @SINCE TAG: org.sleuthkit.datamodel.BlackboardArtifact.ARTIFACT_TYPE Method getCategory()
+MISSING @SINCE TAG: org.sleuthkit.datamodel.BlackboardArtifact.Type Method getCategory()
+MISSING @SINCE TAG: org.sleuthkit.datamodel.Blackboard Method getDataArtifacts(int)
+MISSING @SINCE TAG: org.sleuthkit.datamodel.Blackboard Method getDataArtifacts(int, long)
+MISSING @SINCE TAG: org.sleuthkit.datamodel.DataSource Method getDateAdded()
+MISSING @SINCE TAG: org.sleuthkit.datamodel.Image Method getDateAdded()
+MISSING @SINCE TAG: org.sleuthkit.datamodel.LocalFilesDataSource Method getDateAdded()
+MISSING @SINCE TAG: org.sleuthkit.datamodel.DataSource Method getHost()
+MISSING @SINCE TAG: org.sleuthkit.datamodel.Image Method getHost()
+MISSING @SINCE TAG: org.sleuthkit.datamodel.LocalFilesDataSource Method getHost()
+MISSING @SINCE TAG: org.sleuthkit.datamodel.SleuthkitCase Method getHostAddressManager()
+MISSING @SINCE TAG: org.sleuthkit.datamodel.SleuthkitCase Method getHostManager()
+MISSING @SINCE TAG: org.sleuthkit.datamodel.Blackboard Method getOrAddArtifactType(java.lang.String, java.lang.String, org.sleuthkit.datamodel.BlackboardArtifact.Category)
+MISSING @SINCE TAG: org.sleuthkit.datamodel.SleuthkitCase Method getOsAccountManager()
+MISSING @SINCE TAG: org.sleuthkit.datamodel.AbstractFile Method getOsAccountObjectId()
+MISSING @SINCE TAG: org.sleuthkit.datamodel.SleuthkitCase Method getOsAccountRealmManager()
+MISSING @SINCE TAG: org.sleuthkit.datamodel.AbstractFile Method getOwnerUid()
+MISSING @SINCE TAG: org.sleuthkit.datamodel.SleuthkitCase Method getPersonManager()
+MISSING @SINCE TAG: org.sleuthkit.datamodel.SleuthkitCase Method getScoringManager()
+NO DOC BLOCK: org.sleuthkit.datamodel.AbstractContent Method newAnalysisResult(org.sleuthkit.datamodel.BlackboardArtifact.Type, org.sleuthkit.datamodel.Score, java.lang.String, java.lang.String, java.lang.String, java.util.Collection<org.sleuthkit.datamodel.BlackboardAttribute>)
+MISSING @SINCE TAG: org.sleuthkit.datamodel.Blackboard Method newAnalysisResult(org.sleuthkit.datamodel.BlackboardArtifact.Type, long, java.lang.Long, org.sleuthkit.datamodel.Score, java.lang.String, java.lang.String, java.lang.String, java.util.Collection<org.sleuthkit.datamodel.BlackboardAttribute>, org.sleuthkit.datamodel.SleuthkitCase.CaseDbTransaction)
+NO DOC BLOCK: org.sleuthkit.datamodel.BlackboardArtifact Method newAnalysisResult(org.sleuthkit.datamodel.BlackboardArtifact.Type, org.sleuthkit.datamodel.Score, java.lang.String, java.lang.String, java.lang.String, java.util.Collection<org.sleuthkit.datamodel.BlackboardAttribute>)
+MISSING @SINCE TAG: org.sleuthkit.datamodel.Content Method newAnalysisResult(org.sleuthkit.datamodel.BlackboardArtifact.Type, org.sleuthkit.datamodel.Score, java.lang.String, java.lang.String, java.lang.String, java.util.Collection<org.sleuthkit.datamodel.BlackboardAttribute>)
+NO DOC BLOCK: org.sleuthkit.datamodel.Report Method newAnalysisResult(org.sleuthkit.datamodel.BlackboardArtifact.Type, org.sleuthkit.datamodel.Score, java.lang.String, java.lang.String, java.lang.String, java.util.Collection<org.sleuthkit.datamodel.BlackboardAttribute>)
+MISSING @SINCE TAG: org.sleuthkit.datamodel.Blackboard Method newBlackboardArtifact(org.sleuthkit.datamodel.BlackboardArtifact.Type, long, long, java.util.Collection<org.sleuthkit.datamodel.BlackboardAttribute>, org.sleuthkit.datamodel.SleuthkitCase.CaseDbTransaction)
+NO DOC BLOCK: org.sleuthkit.datamodel.AbstractContent Method newDataArtifact(org.sleuthkit.datamodel.BlackboardArtifact.Type, java.util.Collection<org.sleuthkit.datamodel.BlackboardAttribute>, org.sleuthkit.datamodel.OsAccount)
+MISSING @SINCE TAG: org.sleuthkit.datamodel.Blackboard Method newDataArtifact(org.sleuthkit.datamodel.BlackboardArtifact.Type, long, java.lang.Long, java.util.Collection<org.sleuthkit.datamodel.BlackboardAttribute>, java.lang.Long, org.sleuthkit.datamodel.SleuthkitCase.CaseDbTransaction)
+MISSING @SINCE TAG: org.sleuthkit.datamodel.Blackboard Method newDataArtifact(org.sleuthkit.datamodel.BlackboardArtifact.Type, long, java.lang.Long, java.util.Collection<org.sleuthkit.datamodel.BlackboardAttribute>, org.sleuthkit.datamodel.OsAccount)
+NO DOC BLOCK: org.sleuthkit.datamodel.BlackboardArtifact Method newDataArtifact(org.sleuthkit.datamodel.BlackboardArtifact.Type, java.util.Collection<org.sleuthkit.datamodel.BlackboardAttribute>, org.sleuthkit.datamodel.OsAccount)
+MISSING @SINCE TAG: org.sleuthkit.datamodel.Content Method newDataArtifact(org.sleuthkit.datamodel.BlackboardArtifact.Type, java.util.Collection<org.sleuthkit.datamodel.BlackboardAttribute>, org.sleuthkit.datamodel.OsAccount)
+NO DOC BLOCK: org.sleuthkit.datamodel.Report Method newDataArtifact(org.sleuthkit.datamodel.BlackboardArtifact.Type, java.util.Collection<org.sleuthkit.datamodel.BlackboardAttribute>, org.sleuthkit.datamodel.OsAccount)
+MISSING @SINCE TAG: org.sleuthkit.datamodel.AbstractFile Method save(org.sleuthkit.datamodel.SleuthkitCase.CaseDbTransaction)
+MISSING @SINCE TAG: org.sleuthkit.datamodel.DataSource Method setAcquisitionToolDetails(java.lang.String, java.lang.String, java.lang.String)
+MISSING @SINCE TAG: org.sleuthkit.datamodel.Image Method setAcquisitionToolDetails(java.lang.String, java.lang.String, java.lang.String)
+MISSING @SINCE TAG: org.sleuthkit.datamodel.LocalFilesDataSource Method setAcquisitionToolDetails(java.lang.String, java.lang.String, java.lang.String)
+MISSING @SINCE TAG: org.sleuthkit.datamodel.SleuthkitCase Method setFileUnalloc(org.sleuthkit.datamodel.AbstractFile)
+MISSING @SINCE TAG: org.sleuthkit.datamodel.Image Method setSizes(long, long)
+MISSING @SINCE TAG: org.sleuthkit.datamodel.ContentVisitor Method visit(org.sleuthkit.datamodel.OsAccount)
+MISSING @SINCE TAG: org.sleuthkit.datamodel.ContentVisitor Method visit(org.sleuthkit.datamodel.UnsupportedContent)
+NO DOC BLOCK: org.sleuthkit.datamodel.ContentVisitor.Default Method visit(org.sleuthkit.datamodel.OsAccount)
+NO DOC BLOCK: org.sleuthkit.datamodel.ContentVisitor.Default Method visit(org.sleuthkit.datamodel.UnsupportedContent)
+MISSING @SINCE TAG: org.sleuthkit.datamodel.SleuthkitItemVisitor Method visit(org.sleuthkit.datamodel.OsAccount)
+MISSING @SINCE TAG: org.sleuthkit.datamodel.SleuthkitItemVisitor Method visit(org.sleuthkit.datamodel.UnsupportedContent)
+NO DOC BLOCK: org.sleuthkit.datamodel.SleuthkitItemVisitor.Default Method visit(org.sleuthkit.datamodel.OsAccount)
+NO DOC BLOCK: org.sleuthkit.datamodel.SleuthkitItemVisitor.Default Method visit(org.sleuthkit.datamodel.UnsupportedContent)
+NO DOC BLOCK: org.sleuthkit.datamodel.TimelineEventType Field BACKUP_EVENT_END
+NO DOC BLOCK: org.sleuthkit.datamodel.TimelineEventType Field BACKUP_EVENT_START
+NO DOC BLOCK: org.sleuthkit.datamodel.TimelineEventType Field BLUETOOTH_ADAPTER
+NO DOC BLOCK: org.sleuthkit.datamodel.TimelineEventType Field BLUETOOTH_PAIRING
+NO DOC BLOCK: org.sleuthkit.datamodel.TimelineEventType Field BLUETOOTH_PAIRING_ACCESSED
+NO DOC BLOCK: org.sleuthkit.datamodel.TimelineEventType Field CALENDAR_ENTRY_END
+NO DOC BLOCK: org.sleuthkit.datamodel.TimelineEventType Field CALENDAR_ENTRY_START
+NO DOC BLOCK: org.sleuthkit.datamodel.TimelineEventType Field CALL_LOG_END
+NO DOC BLOCK: org.sleuthkit.datamodel.TimelineEventType Field EMAIL_RCVD
+NO DOC BLOCK: org.sleuthkit.datamodel.TimelineEventType Field OS_INFO
+NO DOC BLOCK: org.sleuthkit.datamodel.TimelineEventType Field PROGRAM_DELETED
+NO DOC BLOCK: org.sleuthkit.datamodel.TimelineEventType Field PROGRAM_NOTIFICATION
+NO DOC BLOCK: org.sleuthkit.datamodel.TimelineEventType Field SCREEN_SHOT
+NO DOC BLOCK: org.sleuthkit.datamodel.TimelineEventType Field SERVICE_ACCOUNT
+NO DOC BLOCK: org.sleuthkit.datamodel.TimelineEventType Field USER_DEVICE_EVENT_END
+NO DOC BLOCK: org.sleuthkit.datamodel.TimelineEventType Field USER_DEVICE_EVENT_START
+NO DOC BLOCK: org.sleuthkit.datamodel.TimelineEventType Field WEB_CACHE
+NO DOC BLOCK: org.sleuthkit.datamodel.TimelineEventType Field WEB_COOKIE_ACCESSED
+NO DOC BLOCK: org.sleuthkit.datamodel.TimelineEventType Field WEB_COOKIE_END
+NO DOC BLOCK: org.sleuthkit.datamodel.TimelineEventType Field WEB_FORM_ADDRESSES_MODIFIED
+NO DOC BLOCK: org.sleuthkit.datamodel.TimelineEventType Field WEB_FORM_AUTOFILL_ACCESSED
+NO DOC BLOCK: org.sleuthkit.datamodel.TimelineEventType Field WEB_HISTORY_CREATED
+NO DOC BLOCK: org.sleuthkit.datamodel.TimelineEventType Field WIFI_NETWORK
